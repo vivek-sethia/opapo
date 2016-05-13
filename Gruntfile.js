@@ -58,7 +58,7 @@ module.exports = function(grunt) {
             main : { // default target
                 files : {
 // take app.less, process it into a css, and save it into temp/
-                    'temp/app.min.css' : ['src/styles/app.less']
+                    'temp/app.min.css' : ['app/styles/main.less']
                 }
             }
         },
@@ -68,7 +68,7 @@ module.exports = function(grunt) {
                 files : {
 // take css in temp, minify it, and save it into dist
                     'dist/app.min.css' : [
-                        'bower_components/bootstrap/dist/css/bootstrap.min.css',
+                        'app/components/bootstrap/dist/css/bootstrap.min.css',
                         'temp/app.min.css'
                     ]
                 }
