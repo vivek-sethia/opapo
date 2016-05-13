@@ -1,3 +1,6 @@
 node_modules
+app/components
+temp
+dist
 .idea
 *~

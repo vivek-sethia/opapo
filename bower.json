@@ -1,0 +1,16 @@
+{
+  "name": "on-page-opt",
+  "description": "",
+  "main": "index.js",
+  "authors": [],
+  "license": "",
+  "homepage": "https://github.com/vivek-sethia/on-page-opt",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "app/components",
+    "test",
+    "tests"
+  ]
+}
