@@ -21,9 +21,6 @@
     "load-grunt-tasks": "~3.5.0",
     "grunt-contrib-jshint": "~1.0.0",
     "grunt-contrib-uglify": "~1.0.1",
-    "grunt-contrib-cssmin": "~1.0.1",
-    "express": "~4.13.4",
-    "request": "~2.72.0",
-    "cheerio": "~0.20.0"
+    "grunt-contrib-cssmin": "~1.0.1"
   }
 }
