@@ -1,84 +1,176 @@
 from bs4 import BeautifulSoup
 
 import requests
+import json
 
-url = 'http://www.amazon.com/Apple-MMGG2LL-MacBook-13-3-Inch-VERSION/dp/B01EIUP20U/ref=sr_1_3?s=pc&ie=UTF8&qid=1463238054&sr=1-3&keywords=apple+macbook+air';
+def scrape_site():
 
-r  = requests.get(url)
+    url = 'http://www.amazon.com/Apple-MMGG2LL-MacBook-13-3-Inch-VERSION/dp/B01EIUP20U/ref=sr_1_3?s=pc&ie=UTF8&qid=1463238054&sr=1-3&keywords=apple+macbook+air';
 
-data = r.text
+    r  = requests.get(url)
 
-soup = BeautifulSoup(data, 'html.parser')
+    data = r.text
 
-titleEl = soup.find("span", {"id": "productTitle"})
-if not(titleEl is None):
-    title = str(titleEl.text).strip()
-    print('title = ' + title)
+    soup = BeautifulSoup(data, 'html.parser')
+    json_data = {}
 
-
-priceEl = soup.find("span", {"id": "priceblock_ourprice"})
-if not(priceEl is None):
-    price = str(priceEl.text).strip()
-    print('price = ' + price)
-    #print(priceEl.attrs)
-    #print(priceEl.style)
-    #print(priceEl.attrs["class"])
-
-ratingEl = soup.find("div", {"id": "avgRating"})
-if not(ratingEl is None):
-    rating = str(ratingEl.text).strip()
-    print('rating = ' + rating)
-
-imageEl = soup.find("img", {"id": "landingImage"})
-if not(imageEl is None):
-    image = imageEl.attrs["src"]
-    print('image = ' + image)
-
-brandEl = soup.find("a", {"id": "brand"})
-if not(brandEl is None):
-    brand = brandEl.text
-    print('brand = ' + brand)
+    titleEl = soup.find("span", {"id": "productTitle"})
+    if not(titleEl is None):
+        json_data['title'] = str(titleEl.text).strip()
 
 
-savingsElRow = soup.find("tr", {"id": "regularprice_savings"})
-if not(savingsElRow is None):
-    savingsEl = savingsElRow.find("td", {"class": "a-color-price"})
-    if not(savingsEl is None):
-        savings = str(savingsEl.text).strip()
-        print('savings = ' + savings)
+    priceEl = soup.find("span", {"id": "priceblock_ourprice"})
+    if not(priceEl is None):
+        json_data['price'] = str(priceEl.text).strip()
 
-availabilityElRow = soup.find("div", {"id": "availability"})
-if not(availabilityElRow is None):
-    availabilityEl = availabilityElRow.find("span")
-    if not(availabilityEl is None):
-        availability = str(availabilityEl.text).strip()
-        print('availability = ' + availability)
 
-featuresElRow = soup.find("div", {"id": "feature-bullets"})
-if not(featuresElRow is None):
-    features = ""
-    for featureEl in featuresElRow.find_all("li", {"id": ""}):
-        if not(featureEl is None):
-            features += featureEl.text + ' , '
-    print('features = ' + features.rstrip(' , '))
+    shippingEl = soup.find("span", {"id": "ourprice_shippingmessage"})
+    if not(shippingEl is None):
+        json_data['shipping'] = str(shippingEl.text).strip()
 
-promotionsElRow = soup.find("div", {"id": "promotions_feature_div"})
-if not(promotionsElRow is None):
-    promotionEl = promotionsElRow.find("li")
-    if not(promotionEl is None):
-        promotion = str(promotionEl.text).strip()
-        print('promotion = ' + promotion)
 
-# questionsElRow = soup.find("div", {"class": "askTeaserQuestions"})
-# if not(questionsElRow is None):
-#     questions = ""
-#     # featuresEl = featuresElRow.find_all("li", {"id": ""})
-#     for questionEl in questionsElRow.select('div[id*="question"]'):
-#         questions += questionEl.text + ' , '
-#     print('features = ' + questions.rstrip(' , '))
+    ratingEl = soup.find("div", {"id": "avgRating"})
+    if not(ratingEl is None):
+        json_data['rating'] = str(ratingEl.text).strip()
 
-#descIframeEl = soup.find("iframe", {"id": "product-description-iframe"})
-#if not(descIframeEl is None):
-#    print(descIframeEl)
-#descriptionEl = soup.find("div", {"class": "productDescriptionWrapper"})
-#print('description = ' + descriptionEl.text)
+
+    imageEl = soup.find("img", {"id": "landingImage"})
+    if not(imageEl is None):
+        json_data['image'] = imageEl.attrs["src"]
+
+
+    brandEl = soup.find("a", {"id": "brand"})
+    if not(brandEl is None):
+        json_data['brand'] = brandEl.text
+
+
+    merchantElRow = soup.find("div", {"id": "merchant-info"})
+    if not(merchantElRow is None):
+        merchantEl = merchantElRow.find("a")
+
+        if not(merchantEl is None):
+            json_data['merchant'] = merchantEl.text
+
+
+    savingsElRow = soup.find("tr", {"id": "regularprice_savings"})
+    if not(savingsElRow is None):
+        savingsEl = savingsElRow.find("td", {"class": "a-color-price"})
+
+        if not(savingsEl is None):
+            json_data['savings'] = str(savingsEl.text).strip()
+
+
+    availabilityElRow = soup.find("div", {"id": "availability"})
+    if not(availabilityElRow is None):
+        availabilityEl = availabilityElRow.find("span")
+
+        if not(availabilityEl is None):
+            json_data['availability'] = str(availabilityEl.text).strip()
+
+
+    featuresElRow = soup.find("div", {"id": "feature-bullets"})
+    if not(featuresElRow is None):
+        json_data['features'] = {}
+        index = 1
+
+        for featureEl in featuresElRow.find_all("li", {"id": ""}):
+            if not(featureEl is None):
+                json_data['features'][index] = featureEl.text
+                index += 1
+
+
+    promotionsElRow = soup.find("div", {"id": "promotions_feature_div"})
+    if not(promotionsElRow is None):
+        promotionEl = promotionsElRow.find("li")
+
+        if not(promotionEl is None):
+            json_data['promotion'] = str(promotionEl.text).strip()
+
+
+    similarItemsElBlock = soup.find("div", {"id": "purchase-sims-feature"})
+    if not(similarItemsElBlock is None):
+        json_data['similarItems'] = {}
+        index = 1
+
+        for similarItemsElRow in similarItemsElBlock.find_all("li"):
+            if not(similarItemsElRow is None):
+                similarItemsEl = similarItemsElRow.find(lambda tag: tag.name == 'div' and 'data-rows' in tag.attrs)
+                json_data['similarItems'][index] = similarItemsEl.text
+                index += 1
+
+
+    categoriesElBlock = soup.find("div", {"id": "wayfinding-breadcrumbs_feature_div"})
+    if not(categoriesElBlock is None):
+        json_data['categories'] = {}
+        index = 1
+
+        for categoriesEl in categoriesElBlock.find_all("li", {"class": ""}):
+            if not(categoriesEl is None):
+                json_data['categories'][index] = categoriesEl.text
+
+                index += 1
+
+
+    frequentlyBoughtElBlock = soup.find("form", {"id": "sims-fbt-form"})
+    if not(frequentlyBoughtElBlock is None):
+
+        json_data['frequently_bought_together'] = {}
+        index = 1
+
+        for frequentlyBoughtEl in frequentlyBoughtElBlock.find_all("label"):
+            if not(frequentlyBoughtEl is None):
+
+                frequentlyBoughtElName = frequentlyBoughtEl.find("a")
+                if not(frequentlyBoughtElName is None):
+
+                    frequentlyBoughtElPrice = frequentlyBoughtEl.find("span", {"class": "a-color-price"})
+                    frequentlyBoughtElAvailability = frequentlyBoughtEl.find("span", {"class": "a-size-base a-color-success"})
+                    frequentlyBoughtElMerchant = frequentlyBoughtEl.find("span", {"class": "a-size-base a-color-secondary a-text-normal"})
+
+                    json_data['frequently_bought_together'][index] = {}
+                    json_data['frequently_bought_together'][index]['name'] = frequentlyBoughtElName.text
+                    json_data['frequently_bought_together'][index]['price'] = frequentlyBoughtElPrice.text
+                    json_data['frequently_bought_together'][index]['availability'] = frequentlyBoughtElAvailability.text
+                    json_data['frequently_bought_together'][index]['merchant'] = frequentlyBoughtElMerchant.text
+
+                    index += 1
+
+
+    json_data['questions'] = get_customer_questions()
+
+    product_data = json.dumps(json_data)
+    # print(product_data)
+
+    return product_data
+
+
+def get_customer_questions():
+
+    url = 'http://www.amazon.com/gp/ask-widget/askWidget.html?asin=B01EIUP20U'
+    r  = requests.get(url)
+
+    data = r.text
+
+    soup = BeautifulSoup(data, 'html.parser')
+    json_data = {}
+
+    questionsElRow = soup.find("div", {"class": "askTeaserQuestions"})
+
+    if not(questionsElRow is None):
+        index = 1
+
+        for questionEl in questionsElRow.select('div[id*="question"]'):
+            json_data[index] = {}
+            json_data[index]['question'] = str(questionEl.text).strip().lstrip('Question:').lstrip()
+            answerEl = questionEl.find_next_sibling("div")
+
+            if not(answerEl is None):
+                answerText = answerEl.select("span:nth-of-type(2)")[0]
+                answeredBy = answerEl.select("span:nth-of-type(3)")[0]
+                json_data[index]['answer'] = str(answerText.text).strip()
+                json_data[index]['answered_by'] = str(answeredBy.text).strip()
+
+            index += 1
+
+    return json_data
+
