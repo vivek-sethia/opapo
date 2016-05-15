@@ -141,6 +141,29 @@ def scrape_site():
                     index += 1
 
 
+    reviewsElBlock = soup.find("div", {"id": "customer-reviews_feature_div"})
+    if not(reviewsElBlock is None):
+        json_data['reviews'] = {}
+        index = 1
+
+        for reviewsEl in reviewsElBlock.select('div[id*="rev-"]'):
+            if not(reviewsEl is None):
+                json_data['reviews'][index] = {}
+
+                reviewByEl = reviewsEl.select("a:nth-of-type(3)")[0]
+                if not(reviewByEl is None):
+                    json_data['reviews'][index]['reviewed_by'] = str(reviewByEl.text).strip()
+
+                reviewedOnEl = reviewByEl.find_next("span")
+                if not(reviewedOnEl is None):
+                    json_data['reviews'][index]['reviewed_on'] = str(reviewedOnEl.text).strip().lstrip('on ')
+
+                reviewDataEl = reviewsEl.select('div[id*="revData-"]')[0].find("div")
+                if not(reviewDataEl is None):
+                    json_data['reviews'][index]['text'] = str(reviewDataEl.text).strip()
+                    index += 1
+
+
     json_data['questions'] = get_customer_questions()
 
     product_data = json.dumps(json_data)
