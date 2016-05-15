@@ -95,8 +95,9 @@ def scrape_site():
         for similarItemsElRow in similarItemsElBlock.find_all("li"):
             if not(similarItemsElRow is None):
                 similarItemsEl = similarItemsElRow.find(lambda tag: tag.name == 'div' and 'data-rows' in tag.attrs)
-                json_data['similarItems'][index] = similarItemsEl.text
-                index += 1
+                if not(similarItemsEl is None):
+                    json_data['similarItems'][index] = similarItemsEl.text
+                    index += 1
 
 
     categoriesElBlock = soup.find("div", {"id": "wayfinding-breadcrumbs_feature_div"})
@@ -107,7 +108,6 @@ def scrape_site():
         for categoriesEl in categoriesElBlock.find_all("li", {"class": ""}):
             if not(categoriesEl is None):
                 json_data['categories'][index] = categoriesEl.text
-
                 index += 1
 
 
@@ -123,15 +123,20 @@ def scrape_site():
                 frequentlyBoughtElName = frequentlyBoughtEl.find("a")
                 if not(frequentlyBoughtElName is None):
 
-                    frequentlyBoughtElPrice = frequentlyBoughtEl.find("span", {"class": "a-color-price"})
-                    frequentlyBoughtElAvailability = frequentlyBoughtEl.find("span", {"class": "a-size-base a-color-success"})
-                    frequentlyBoughtElMerchant = frequentlyBoughtEl.find("span", {"class": "a-size-base a-color-secondary a-text-normal"})
-
                     json_data['frequently_bought_together'][index] = {}
                     json_data['frequently_bought_together'][index]['name'] = frequentlyBoughtElName.text
-                    json_data['frequently_bought_together'][index]['price'] = frequentlyBoughtElPrice.text
-                    json_data['frequently_bought_together'][index]['availability'] = frequentlyBoughtElAvailability.text
-                    json_data['frequently_bought_together'][index]['merchant'] = frequentlyBoughtElMerchant.text
+
+                    frequentlyBoughtElPrice = frequentlyBoughtEl.find("span", {"class": "a-color-price"})
+                    if not(frequentlyBoughtElPrice is None):
+                        json_data['frequently_bought_together'][index]['price'] = frequentlyBoughtElPrice.text
+
+                    frequentlyBoughtElAvailability = frequentlyBoughtEl.find("span", {"class": "a-size-base a-color-success"})
+                    if not(frequentlyBoughtElAvailability is None):
+                        json_data['frequently_bought_together'][index]['availability'] = frequentlyBoughtElAvailability.text
+
+                    frequentlyBoughtElMerchant = frequentlyBoughtEl.find("span", {"class": "a-size-base a-color-secondary a-text-normal"})
+                    if not(frequentlyBoughtElMerchant is None):
+                        json_data['frequently_bought_together'][index]['merchant'] = frequentlyBoughtElMerchant.text
 
                     index += 1
 
