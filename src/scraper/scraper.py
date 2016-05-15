@@ -132,25 +132,28 @@ def scrape_site():
         for frequentlyBoughtEl in frequentlyBoughtElBlock.find_all("label"):
             if not(frequentlyBoughtEl is None):
 
-                frequentlyBoughtElName = frequentlyBoughtEl.find("a")
-                if not(frequentlyBoughtElName is None):
-
-                    json_data['frequently_bought_together'][index] = {}
-                    json_data['frequently_bought_together'][index]['name'] = frequentlyBoughtElName.text
-
-                    frequentlyBoughtElPrice = frequentlyBoughtEl.find("span", {"class": "a-color-price"})
-                    if not(frequentlyBoughtElPrice is None):
-                        json_data['frequently_bought_together'][index]['price'] = frequentlyBoughtElPrice.text
-
-                    frequentlyBoughtElAvailability = frequentlyBoughtEl.find("span", {"class": "a-size-base a-color-success"})
-                    if not(frequentlyBoughtElAvailability is None):
-                        json_data['frequently_bought_together'][index]['availability'] = frequentlyBoughtElAvailability.text
-
-                    frequentlyBoughtElMerchant = frequentlyBoughtEl.find("span", {"class": "a-size-base a-color-secondary a-text-normal"})
-                    if not(frequentlyBoughtElMerchant is None):
-                        json_data['frequently_bought_together'][index]['merchant'] = frequentlyBoughtElMerchant.text
-
+                if index == 1:
                     index += 1
+                else:
+                    frequentlyBoughtElName = frequentlyBoughtEl.find("a")
+                    if not(frequentlyBoughtElName is None):
+
+                        json_data['frequently_bought_together'][index] = {}
+                        json_data['frequently_bought_together'][index]['name'] = frequentlyBoughtElName.text
+
+                        frequentlyBoughtElPrice = frequentlyBoughtEl.find("span", {"class": "a-color-price"})
+                        if not(frequentlyBoughtElPrice is None):
+                            json_data['frequently_bought_together'][index]['price'] = frequentlyBoughtElPrice.text
+
+                        frequentlyBoughtElAvailability = frequentlyBoughtEl.find("span", {"class": "a-size-base a-color-success"})
+                        if not(frequentlyBoughtElAvailability is None):
+                            json_data['frequently_bought_together'][index]['availability'] = frequentlyBoughtElAvailability.text
+
+                        frequentlyBoughtElMerchant = frequentlyBoughtEl.find("span", {"class": "a-size-base a-color-secondary a-text-normal"})
+                        if not(frequentlyBoughtElMerchant is None):
+                            json_data['frequently_bought_together'][index]['merchant'] = frequentlyBoughtElMerchant.text
+
+                        index += 1
 
 
     reviewsElBlock = soup.find("div", {"id": "customer-reviews_feature_div"})
@@ -191,7 +194,7 @@ def scrape_site():
 def get_customer_questions():
 
     url = 'http://www.amazon.com/gp/ask-widget/askWidget.html?asin=B01EIUP20U'
-    r  = requests.get(url)
+    r = requests.get(url)
 
     data = r.text
 
