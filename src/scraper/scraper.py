@@ -6,8 +6,9 @@ import json
 def scrape_site():
 
     url = 'http://www.amazon.com/Apple-MMGG2LL-MacBook-13-3-Inch-VERSION/dp/B01EIUP20U/ref=sr_1_3?s=pc&ie=UTF8&qid=1463238054&sr=1-3&keywords=apple+macbook+air';
+    # url = 'http://www.amazon.com/Harry-Potter-Sorcerers-Stone-Illustrated/dp/0545790352/ref=sr_1_5?s=books&ie=UTF8&qid=1463325600&sr=1-5&keywords=harry+potter'
 
-    r  = requests.get(url)
+    r = requests.get(url)
 
     data = r.text
 
@@ -42,6 +43,17 @@ def scrape_site():
     brandEl = soup.find("a", {"id": "brand"})
     if not(brandEl is None):
         json_data['brand'] = brandEl.text
+
+
+    titleElBlock = soup.select('div[id*="Title"]')[0]
+    if not(titleElBlock is None):
+        authorRowEl = titleElBlock.find("span", {"class": "author"})
+
+        if not(authorRowEl is None):
+            authorEl = authorRowEl.find("span")
+
+            if not(authorEl is None):
+                json_data['author'] = str(authorEl.text).strip().rstrip("(Author)").strip()
 
 
     merchantElRow = soup.find("div", {"id": "merchant-info"})
@@ -149,6 +161,10 @@ def scrape_site():
         for reviewsEl in reviewsElBlock.select('div[id*="rev-"]'):
             if not(reviewsEl is None):
                 json_data['reviews'][index] = {}
+
+                reviewRatingEl = reviewsEl.select("a:nth-of-type(1)")[0]
+                if not(reviewRatingEl is None):
+                    json_data['reviews'][index]['review_rating'] = str(reviewRatingEl.attrs['title']).strip()
 
                 reviewByEl = reviewsEl.select("a:nth-of-type(3)")[0]
                 if not(reviewByEl is None):
