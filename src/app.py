@@ -1,5 +1,5 @@
 from flask import Flask, Response
-from scraper.scraper import scrape_site
+from scraper.amazon_scraper import scrape_site
 
 app = Flask(__name__)
 

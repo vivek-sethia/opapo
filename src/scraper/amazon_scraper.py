@@ -2,10 +2,11 @@ from bs4 import BeautifulSoup
 
 import requests
 import json
+import re
 
 def scrape_site():
 
-    url = 'http://www.amazon.com/Apple-MMGG2LL-MacBook-13-3-Inch-VERSION/dp/B01EIUP20U/ref=sr_1_3?s=pc&ie=UTF8&qid=1463238054&sr=1-3&keywords=apple+macbook+air';
+    url = 'http://www.amazon.com/Apple-MMGG2LL-MacBook-13-3-Inch-VERSION/dp/B01EIUP20U/ref=sr_1_3?s=pc&ie=UTF8&qid=1463238054&sr=1-3&keywords=apple+macbook+air'
     # url = 'http://www.amazon.com/Harry-Potter-Sorcerers-Stone-Illustrated/dp/0545790352/ref=sr_1_5?s=books&ie=UTF8&qid=1463325600&sr=1-5&keywords=harry+potter'
 
     r = requests.get(url)
@@ -27,7 +28,7 @@ def scrape_site():
 
     shippingEl = soup.find("span", {"id": "ourprice_shippingmessage"})
     if not(shippingEl is None):
-        json_data['shipping'] = str(shippingEl.text).strip()
+        json_data['shipping'] = str(shippingEl.text).strip().lstrip('&').strip()
 
 
     ratingEl = soup.find("div", {"id": "avgRating"})
@@ -183,9 +184,24 @@ def scrape_site():
                     index += 1
 
 
+    detailsElBlock = soup.find("div", {"id": "productDetails_db_sections"})
+    if not(detailsElBlock is None):
+        json_data['details'] = {}
+        pattern = re.compile("review", flags=re.IGNORECASE)
+
+        for detailsEl in detailsElBlock.find_all("tr"):
+            if not(detailsEl is None):
+
+                detailKeyEl = detailsEl.find("th")
+                detailValueEl = detailsEl.find("td")
+
+                if not(detailKeyEl is None) and not(detailValueEl is None) and (pattern.search(detailKeyEl.text) is None):
+                    json_data['details'][str(detailKeyEl.text).strip()] = str(detailValueEl.text).strip()
+
+
     json_data['questions'] = get_customer_questions()
 
-    product_data = json.dumps(json_data)
+    product_data = json.dumps(json_data, sort_keys=True)
     # print(product_data)
 
     return product_data
