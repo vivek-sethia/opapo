@@ -199,6 +199,26 @@ def scrape_site():
                     json_data['details'][str(detailKeyEl.text).strip()] = str(detailValueEl.text).strip()
 
 
+    competitorsElBlock = soup.find("div", {"id": "mbc"})
+    if not(competitorsElBlock is None):
+        json_data['competitors'] = {}
+        index = 1
+
+        for competitorEl in competitorsElBlock.find_all("div", {"class": "mbc-offer-row"}):
+            if not(competitorEl is None):
+
+                json_data['competitors'][index] = {}
+
+                competitorPriceEl = competitorEl.find("span", {"class": "a-color-price"})
+                if not(competitorPriceEl is None):
+                    json_data['competitors'][index]['price'] = str(competitorPriceEl.text).strip()
+
+                competitorNameEl = competitorEl.find("span", {"class": "mbcMerchantName"})
+                if not(competitorNameEl is None):
+                    json_data['competitors'][index]['merchant'] = str(competitorNameEl.text).strip()
+                    index += 1
+
+
     json_data['questions'] = get_customer_questions()
 
     product_data = json.dumps(json_data, sort_keys=True)
