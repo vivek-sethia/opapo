@@ -18,9 +18,17 @@ def scrape_site():
     if not(titleEl is None):
         json_data['title'] = titleEl.text.strip('Details about')
 
-    priceEl = soup.find("span", {"id": "mm-saleDscPrc"})
+    priceEl = soup.find("span", {"id": "mm-saleDscPrc"}) or soup.find("span", {"id": "prcIsum"})
     if not (priceEl is None):
         json_data['price'] = (priceEl.text).strip()
+
+    savingsEl = soup.find("span", {"id": "youSaveSTP"})
+    if not (savingsEl is None):
+        json_data['savings'] = (savingsEl.text).strip()
+
+    soldQuantityEl = soup.find("span", {"class": "w2b-sgl"})
+    if not (soldQuantityEl is None):
+        json_data['sold_quantity'] = (soldQuantityEl.text).strip().rstrip(" sold")
 
     shippingEl = soup.find("span", {"id": "fshippingCost"})
     if not (shippingEl is None):
@@ -28,7 +36,7 @@ def scrape_site():
 
     shippingToEl = soup.find("div", {"class": "sh-sLoc"})
     if not (shippingToEl is None):
-        json_data['shippingTo'] = (shippingToEl.text).strip()
+        json_data['shippingTo'] = (shippingToEl.text).strip().lstrip("Shipping to: ")
 
 
     imageEl = soup.find("img", {"id": "icImg"})
@@ -78,8 +86,51 @@ def scrape_site():
     if not (ratingEl is None):
         json_data['rating'] = (ratingEl.text).strip()
 
+    reviewsElBlock = soup.find("div", {"class": "reviews"})
+    if not(reviewsElBlock is None):
+        json_data['reviews'] = {}
+        index = 1
 
-    product_data = json.dumps(json_data)
+        for reviewsEl in reviewsElBlock.find_all("div", {"class": "ebay-review-section"}):
+            if not(reviewsEl is None):
+
+                json_data['reviews'][index] = {}
+                reviewedByEl = reviewsEl.find("a", {"itemprop": "author"})
+                if not(reviewedByEl is None):
+                    json_data['reviews'][index]['reviewed_by'] = reviewedByEl.text.strip()
+
+                reviewRatingEl = reviewsEl.find("div", {"class": "ebay-star-rating"})
+                if not(reviewRatingEl is None):
+                    json_data['reviews'][index]['rating'] = reviewRatingEl.attrs["title"].strip()
+
+                reviewNameEl = reviewsEl.find("p", {"itemprop": "name"})
+                if not(reviewNameEl is None):
+                    json_data['reviews'][index]['title'] = reviewNameEl.text.strip()
+
+                reviewDescriptionEl = reviewsEl.find("p", {"itemprop": "reviewBody"})
+                if not(reviewDescriptionEl is None):
+                    json_data['reviews'][index]['description'] = reviewDescriptionEl.text.strip()
+
+                reviewedOnEl = reviewsEl.find("span", {"itemprop": "datePublished"})
+                if not(reviewedOnEl is None):
+                    json_data['reviews'][index]['reviewed_on'] = reviewedOnEl.text.strip()
+
+                reviewAttributesElBlock = reviewsEl.find("p", {"class": "review-attr"})
+                if not(reviewAttributesElBlock is None):
+                    attributeIndex = 0
+                    for reviewAttributesEl in reviewAttributesElBlock.find_all("span", {"class": "rvw-attr"}):
+                        if not(reviewAttributesEl is None):
+
+                            reviewValueEl = reviewAttributesElBlock.select("span.rvw-val")[attributeIndex]
+                            if not(reviewValueEl is None):
+
+                                json_data['reviews'][index][reviewAttributesEl.text.strip()] = reviewValueEl.text.strip()
+                                attributeIndex += 1
+
+                    index += 1
+
+
+    product_data = json.dumps(json_data, sort_keys=True)
     # print(product_data)
 
     return product_data
