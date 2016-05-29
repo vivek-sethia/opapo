@@ -190,7 +190,7 @@ def scrape_site(url):
                     index += 1
 
 
-    detailsElBlock = soup.find("div", {"id": "productDetails_db_sections"})
+    detailsElBlock = soup.find("table", {"id": "productDetails_detailBullets_sections1"})
     if not(detailsElBlock is None):
         json_data['details'] = {}
         pattern = re.compile("review", flags=re.IGNORECASE)
@@ -225,7 +225,7 @@ def scrape_site(url):
                     index += 1
 
 
-    json_data['questions'] = get_customer_questions()
+    json_data['questions'] = get_customer_questions(json_data['details']['ASIN'])
 
     product_data = json.dumps(json_data, sort_keys=True)
     # print(product_data)
@@ -233,9 +233,9 @@ def scrape_site(url):
     return product_data
 
 
-def get_customer_questions():
+def get_customer_questions(asin):
 
-    url = 'http://www.amazon.com/gp/ask-widget/askWidget.html?asin=B01EIUP20U'
+    url = 'http://www.amazon.com/gp/ask-widget/askWidget.html?asin=' + asin
     r = requests.get(url)
 
     data = r.text
