@@ -6,10 +6,15 @@ import re
 
 def scrape_site():
 
+    # url = 'http://www.amazon.com/dp/B0047E0EII/ref=azfs_379213722_HutzlerBananaSlicer_1'
     url = 'http://www.amazon.com/Apple-MMGG2LL-MacBook-13-3-Inch-VERSION/dp/B01EIUP20U/ref=sr_1_3?s=pc&ie=UTF8&qid=1463238054&sr=1-3&keywords=apple+macbook+air'
     # url = 'http://www.amazon.com/Harry-Potter-Sorcerers-Stone-Illustrated/dp/0545790352/ref=sr_1_5?s=books&ie=UTF8&qid=1463325600&sr=1-5&keywords=harry+potter'
 
-    r = requests.get(url)
+    headers = {
+        'User-Agent': 'Mozilla/5.0'
+    }
+
+    r = requests.get(url, headers=headers)
 
     data = r.text
 
