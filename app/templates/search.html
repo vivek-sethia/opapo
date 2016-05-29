@@ -1,0 +1,17 @@
+<!-- extend base layout -->
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Search Product</h1>
+    <form action="" method="post" name="search">
+        {{ form.hidden_tag() }}
+        <p>
+            Please enter your product url<br>
+            {{ form.product(size=80) }}
+            {% for error in form.product.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}<br>
+        </p>
+        <p><input type="submit" value="Search"></p>
+    </form>
+{% endblock %}
