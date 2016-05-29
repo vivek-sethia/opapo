@@ -14,7 +14,8 @@ def search():
     form = SearchForm()
     if form.validate_on_submit():
         # flash('Search requested for Product="%s"' % (str(form.product.data)))
-        data = scrape_site(str(form.product.data))
+        data = scrape_site(app.config['PUBLIC_KEY'], app.config['PRIVATE_KEY'], app.config['ASSOCIATE_TAG'],
+                           str(form.product.data))
         resp = Response(data, status=200, mimetype='application/json')
         return resp
 

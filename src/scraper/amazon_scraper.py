@@ -1,11 +1,13 @@
 from bs4 import BeautifulSoup
+from src.vendor.aws_signed_request import aws_signed_request
+from xml.dom import minidom
 
 import requests
 import json
 import re
 
 
-def scrape_site(url):
+def scrape_site(public_key, private_key, associate_tag, url):
 
     # url = 'http://www.amazon.com/dp/B0047E0EII/ref=azfs_379213722_HutzlerBananaSlicer_1'
     # url = 'http://www.amazon.com/Apple-MMGG2LL-MacBook-13-3-Inch-VERSION/dp/B01EIUP20U/ref=sr_1_3?s=pc&ie=UTF8&qid=1463238054&sr=1-3&keywords=apple+macbook+air'
@@ -224,8 +226,9 @@ def scrape_site(url):
                     json_data['competitors'][index]['merchant'] = str(competitorNameEl.text).strip()
                     index += 1
 
-
-    json_data['questions'] = get_customer_questions(json_data['details']['ASIN'])
+    json_data['ASIN'] = json_data['details']['ASIN']
+    json_data['questions'] = get_customer_questions(json_data['ASIN'])
+    json_data['UPC'] = get_product_upc(public_key, private_key, associate_tag, json_data['ASIN'])
 
     product_data = json.dumps(json_data, sort_keys=True)
     # print(product_data)
@@ -263,3 +266,17 @@ def get_customer_questions(asin):
 
     return json_data
 
+
+def get_product_upc(public_key, private_key, associate_tag, asin):
+
+    # generate signed URL
+    url = aws_signed_request('com', {
+            'Operation': 'ItemLookup',
+            'ItemId': asin,
+            'ResponseGroup': 'ItemAttributes'}, public_key, private_key, associate_tag)
+
+    response = requests.get(url)
+    xml = minidom.parseString(response.text.encode('utf-8'))
+    upc_el = xml.getElementsByTagName('UPC')
+
+    return upc_el[0].firstChild.nodeValue
