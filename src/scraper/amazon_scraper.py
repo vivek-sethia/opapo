@@ -7,7 +7,7 @@ import json
 import re
 
 
-def scrape_site(public_key, private_key, associate_tag, url):
+def scrape_amazon_site(public_key, private_key, associate_tag, url):
 
     # url = 'http://www.amazon.com/dp/B0047E0EII/ref=azfs_379213722_HutzlerBananaSlicer_1'
     # url = 'http://www.amazon.com/Apple-MMGG2LL-MacBook-13-3-Inch-VERSION/dp/B01EIUP20U/ref=sr_1_3?s=pc&ie=UTF8&qid=1463238054&sr=1-3&keywords=apple+macbook+air'
@@ -230,10 +230,11 @@ def scrape_site(public_key, private_key, associate_tag, url):
     json_data['questions'] = get_customer_questions(json_data['ASIN'])
     json_data['UPC'] = get_product_upc(public_key, private_key, associate_tag, json_data['ASIN'])
 
-    product_data = json.dumps(json_data, sort_keys=True)
-    # print(product_data)
+    data = {}
+    data['id'] = json_data['UPC']
+    data['scraped_data'] = json_data
 
-    return product_data
+    return data
 
 
 def get_customer_questions(asin):

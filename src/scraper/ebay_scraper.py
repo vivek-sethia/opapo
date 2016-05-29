@@ -1,11 +1,34 @@
 from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.keys import Keys
 
 import requests
 import json
 
-def scrape_site():
+def scrape_ebay_site_external(upc) :
+    browser = webdriver.Firefox()
+    browser.get('http://www.ebay.com')
 
-    url = 'http://www.ebay.com/itm/Nikon-AF-S-DX-NIKKOR-55-200mm-f-4-5-6G-ED-VR-II-Lens-Factory-Refurbished-/311498162380?_trkparms=%26rpp_cid%3D5702b40de4b0826387589b2e%26rpp_icid%3D5702cf3fe4b079ecf2fa287f'
+    element = browser.find_element_by_name("_nkw")
+    element.send_keys(upc)
+    browser.find_element_by_css_selector('.gh-td .gh-spr').click()
+    html_source = browser.page_source
+
+    browser.quit()
+
+    soup = BeautifulSoup(html_source, 'html.parser')
+
+    resultsEl = soup.select('a[class="vip"]')
+
+    if not (resultsEl is None):
+        url = resultsEl[0].attrs["href"]
+        ebay_data = scrape_ebay_site(url)
+        return ebay_data
+
+def scrape_ebay_site(url):
+
+    #url = 'http://www.ebay.com/itm/Nikon-AF-S-DX-NIKKOR-55-200mm-f-4-5-6G-ED-VR-II-Lens-Factory-Refurbished-/311498162380?_trkparms=%26rpp_cid%3D5702b40de4b0826387589b2e%26rpp_icid%3D5702cf3fe4b079ecf2fa287f'
 
     r  = requests.get(url)
 
@@ -129,11 +152,11 @@ def scrape_site():
 
                     index += 1
 
-
-    product_data = json.dumps(json_data, sort_keys=True)
+    data = {}
+    data['scraped_data'] = json_data
     # print(product_data)
 
-    return product_data
+    return data
 
 
 

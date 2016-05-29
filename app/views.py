@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, Flask, Response
 from app import app
 from .forms import SearchForm
-from src.scraper.amazon_scraper import scrape_site
+from src.scraper.base_scraper import scrape_site
 
 
 @app.route('/')
