@@ -49,7 +49,7 @@ def scrape_amazon_site(public_key, private_key, associate_tag, url):
 
     review_count_el = soup.find("span", {"id": "acrCustomerReviewText"})
     if not(review_count_el is None):
-        review_count = re.findall(r'\d+(?:,\d+)?', review_count_el.text)[0]
+        review_count = re.findall(r'\d+(?:(?:,|\.)\d+)*', review_count_el.text)[0]
         json_data['rating']['review_count'] = locale.atoi(review_count)
 
     review_summary_el = soup.find('div', {'id': 'revSum'})
@@ -220,22 +220,32 @@ def scrape_amazon_site(public_key, private_key, associate_tag, url):
 
     competitors_el_block = soup.find("div", {"id": "mbc"})
     if not(competitors_el_block is None):
-        json_data['competitors'] = {}
+        json_data['other_sellers'] = {}
+        json_data['other_sellers']['details'] = {}
+        json_data['other_sellers']['average_price'] = 0
         index = 1
+        sum = 0
 
         for competitor_el in competitors_el_block.find_all("div", {"class": "mbc-offer-row"}):
             if not(competitor_el is None):
 
-                json_data['competitors'][index] = {}
+                json_data['other_sellers']['details'][index] = {}
 
                 competitor_price_el = competitor_el.find("span", {"class": "a-color-price"})
                 if not(competitor_price_el is None):
-                    json_data['competitors'][index]['price'] = str(competitor_price_el.text).strip()
+
+                    competitor_price = re.findall(r'\d+(?:(?:,|\.)\d+)*', competitor_price_el.text)[0]
+                    competitor_price = locale.atof(competitor_price)
+                    sum += competitor_price
+                    json_data['other_sellers']['details'][index]['price_num'] = competitor_price
+                    json_data['other_sellers']['details'][index]['price'] = str(competitor_price_el.text).strip()
 
                 competitor_name_el = competitor_el.find("span", {"class": "mbcMerchantName"})
                 if not(competitor_name_el is None):
-                    json_data['competitors'][index]['merchant'] = str(competitor_name_el.text).strip()
+                    json_data['other_sellers']['details'][index]['merchant'] = str(competitor_name_el.text).strip()
                     index += 1
+
+        json_data['other_sellers']['average_price'] = round(sum/(index-1), 4)
 
     json_data['ASIN'] = json_data['details']['ASIN']
     json_data['questions'] = get_customer_questions(json_data['ASIN'])
