@@ -5,225 +5,236 @@ from xml.dom import minidom
 import requests
 import json
 import re
+import locale
+
+locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 
 def scrape_amazon_site(public_key, private_key, associate_tag, url):
 
     # url = 'http://www.amazon.com/dp/B0047E0EII/ref=azfs_379213722_HutzlerBananaSlicer_1'
-    # url = 'http://www.amazon.com/Apple-MMGG2LL-MacBook-13-3-Inch-VERSION/dp/B01EIUP20U/ref=sr_1_3?s=pc&ie=UTF8&qid=1463238054&sr=1-3&keywords=apple+macbook+air'
-    # url = 'http://www.amazon.com/Harry-Potter-Sorcerers-Stone-Illustrated/dp/0545790352/ref=sr_1_5?s=books&ie=UTF8&qid=1463325600&sr=1-5&keywords=harry+potter'
+    # url = 'http://www.amazon.com/Apple-MMGG2LL-MacBook-13-3-Inch-VERSION/dp/B01EIUP20U/ref=
+    # sr_1_3?s=pc&ie=UTF8&qid=1463238054&sr=1-3&keywords=apple+macbook+air'
+    # url = 'http://www.amazon.com/Harry-Potter-Sorcerers-Stone-Illustrated/dp/0545790352/ref=
+    # sr_1_5?s=books&ie=UTF8&qid=1463325600&sr=1-5&keywords=harry+potter'
 
     headers = {
         'User-Agent': 'Mozilla/5.0'
     }
 
-    r = requests.get(url, headers=headers)
+    r = requests.get(url.strip(), headers=headers)
 
     data = r.text
 
     soup = BeautifulSoup(data, 'html.parser')
     json_data = {}
 
-    titleEl = soup.find("span", {"id": "productTitle"})
-    if not(titleEl is None):
-        json_data['title'] = str(titleEl.text).strip()
+    title_el = soup.find("span", {"id": "productTitle"})
+    if not(title_el is None):
+        json_data['title'] = title_el.text.encode('utf-8').strip()
 
+    price_el = soup.find("span", {"id": "priceblock_ourprice"})
+    if not(price_el is None):
+        json_data['price'] = str(price_el.text).strip()
 
-    priceEl = soup.find("span", {"id": "priceblock_ourprice"})
-    if not(priceEl is None):
-        json_data['price'] = str(priceEl.text).strip()
+    shipping_el = soup.find("span", {"id": "ourprice_shippingmessage"})
+    if not(shipping_el is None):
+        json_data['shipping'] = str(shipping_el.text).strip().lstrip('&').strip()
 
+    json_data['rating'] = {}
 
-    shippingEl = soup.find("span", {"id": "ourprice_shippingmessage"})
-    if not(shippingEl is None):
-        json_data['shipping'] = str(shippingEl.text).strip().lstrip('&').strip()
+    rating_el = soup.find("div", {"id": "avgRating"})
+    if not(rating_el is None):
+        json_data['rating']['average'] = str(rating_el.text).strip()
 
+    review_count_el = soup.find("span", {"id": "acrCustomerReviewText"})
+    if not(review_count_el is None):
+        review_count = re.findall(r'\d+(?:,\d+)?', review_count_el.text)[0]
+        json_data['rating']['review_count'] = locale.atoi(review_count)
 
-    ratingEl = soup.find("div", {"id": "avgRating"})
-    if not(ratingEl is None):
-        json_data['rating'] = str(ratingEl.text).strip()
+    review_summary_el = soup.find('div', {'id': 'revSum'})
+    if not(review_summary_el is None):
 
+        for review_row_el in review_summary_el.find_all('tr', {'class': 'a-histogram-row'}):
+            if not(review_row_el is None):
 
-    imageEl = soup.find("img", {"id": "landingImage"})
-    if not(imageEl is None):
-        json_data['image'] = imageEl.attrs["src"]
+                review_name_el = review_row_el.select("a:nth-of-type(1)")
+                review_rating_el = review_row_el.select("a:nth-of-type(3)")
+                if review_name_el and review_rating_el:
+                    json_data['rating'][review_name_el[0].text] = review_rating_el[0].text
 
+    image_el = soup.find("img", {"id": "landingImage"})
+    if not(image_el is None):
+        json_data['image'] = image_el.attrs["src"]
 
-    brandEl = soup.find("a", {"id": "brand"})
-    if not(brandEl is None):
-        json_data['brand'] = brandEl.text
+    brand_el = soup.find("a", {"id": "brand"})
+    if not(brand_el is None):
+        json_data['brand'] = brand_el.text
 
+    title_el_block = soup.select('div[id*="Title"]')[0]
+    if not(title_el_block is None):
+        author_row_el = title_el_block.find("span", {"class": "author"})
 
-    titleElBlock = soup.select('div[id*="Title"]')[0]
-    if not(titleElBlock is None):
-        authorRowEl = titleElBlock.find("span", {"class": "author"})
+        if not(author_row_el is None):
+            author_el = author_row_el.find("span")
 
-        if not(authorRowEl is None):
-            authorEl = authorRowEl.find("span")
+            if not(author_el is None):
+                json_data['author'] = str(author_el.text).strip().rstrip("(Author)").strip()
 
-            if not(authorEl is None):
-                json_data['author'] = str(authorEl.text).strip().rstrip("(Author)").strip()
+    merchant_row_el = soup.find("div", {"id": "merchant-info"})
+    if not(merchant_row_el is None):
+        merchant_el = merchant_row_el.find("a")
 
+        if not(merchant_el is None):
+            json_data['merchant'] = merchant_el.text
 
-    merchantElRow = soup.find("div", {"id": "merchant-info"})
-    if not(merchantElRow is None):
-        merchantEl = merchantElRow.find("a")
+    savings_row_el = soup.find("tr", {"id": "regularprice_savings"})
+    if not(savings_row_el is None):
+        savings_el = savings_row_el.find("td", {"class": "a-color-price"})
 
-        if not(merchantEl is None):
-            json_data['merchant'] = merchantEl.text
+        if not(savings_el is None):
+            json_data['savings'] = str(savings_el.text).strip()
 
+    availability_row_el = soup.find("div", {"id": "availability"})
+    if not(availability_row_el is None):
+        availability_el = availability_row_el.find("span")
 
-    savingsElRow = soup.find("tr", {"id": "regularprice_savings"})
-    if not(savingsElRow is None):
-        savingsEl = savingsElRow.find("td", {"class": "a-color-price"})
+        if not(availability_el is None):
+            json_data['availability'] = str(availability_el.text).strip()
 
-        if not(savingsEl is None):
-            json_data['savings'] = str(savingsEl.text).strip()
-
-
-    availabilityElRow = soup.find("div", {"id": "availability"})
-    if not(availabilityElRow is None):
-        availabilityEl = availabilityElRow.find("span")
-
-        if not(availabilityEl is None):
-            json_data['availability'] = str(availabilityEl.text).strip()
-
-
-    featuresElRow = soup.find("div", {"id": "feature-bullets"})
-    if not(featuresElRow is None):
+    features_row_el = soup.find("div", {"id": "feature-bullets"})
+    if not(features_row_el is None):
         json_data['features'] = {}
         index = 1
 
-        for featureEl in featuresElRow.find_all("li", {"id": ""}):
-            if not(featureEl is None):
-                json_data['features'][index] = featureEl.text
+        for feature_el in features_row_el.find_all("li", {"id": ""}):
+            if not(feature_el is None):
+                json_data['features'][index] = feature_el.text
                 index += 1
 
+    promotions_row_el = soup.find("div", {"id": "promotions_feature_div"})
+    if not(promotions_row_el is None):
+        promotion_el = promotions_row_el.find("li")
 
-    promotionsElRow = soup.find("div", {"id": "promotions_feature_div"})
-    if not(promotionsElRow is None):
-        promotionEl = promotionsElRow.find("li")
+        if not(promotion_el is None):
+            json_data['promotion'] = str(promotion_el.text).strip()
 
-        if not(promotionEl is None):
-            json_data['promotion'] = str(promotionEl.text).strip()
-
-
-    similarItemsElBlock = soup.find("div", {"id": "purchase-sims-feature"})
-    if not(similarItemsElBlock is None):
+    similar_items_el_block = soup.find("div", {"id": "purchase-sims-feature"})
+    if not(similar_items_el_block is None):
         json_data['similarItems'] = {}
         index = 1
 
-        for similarItemsElRow in similarItemsElBlock.find_all("li"):
-            if not(similarItemsElRow is None):
-                similarItemsEl = similarItemsElRow.find(lambda tag: tag.name == 'div' and 'data-rows' in tag.attrs)
-                if not(similarItemsEl is None):
-                    json_data['similarItems'][index] = similarItemsEl.text
+        for similar_items_elRow in similar_items_el_block.find_all("li"):
+            if not(similar_items_elRow is None):
+                similar_items_el = similar_items_elRow.find(lambda tag: tag.name == 'div' and 'data-rows' in tag.attrs)
+                if not(similar_items_el is None):
+                    json_data['similarItems'][index] = similar_items_el.text
                     index += 1
 
-
-    categoriesElBlock = soup.find("div", {"id": "wayfinding-breadcrumbs_feature_div"})
-    if not(categoriesElBlock is None):
+    categories_el_block = soup.find("div", {"id": "wayfinding-breadcrumbs_feature_div"})
+    if not(categories_el_block is None):
         json_data['categories'] = {}
         index = 1
 
-        for categoriesEl in categoriesElBlock.find_all("li", {"class": ""}):
-            if not(categoriesEl is None):
-                json_data['categories'][index] = categoriesEl.text
+        for categories_el in categories_el_block.find_all("li", {"class": ""}):
+            if not(categories_el is None):
+                json_data['categories'][index] = categories_el.text
                 index += 1
 
-
-    frequentlyBoughtElBlock = soup.find("form", {"id": "sims-fbt-form"})
-    if not(frequentlyBoughtElBlock is None):
+    frequently_bought_el_block = soup.find("form", {"id": "sims-fbt-form"})
+    if not(frequently_bought_el_block is None):
 
         json_data['frequently_bought_together'] = {}
         index = 1
 
-        for frequentlyBoughtEl in frequentlyBoughtElBlock.find_all("label"):
-            if not(frequentlyBoughtEl is None):
+        for frequently_bought_el in frequently_bought_el_block.find_all("label"):
+            if not(frequently_bought_el is None):
 
                 if index == 1:
                     index += 1
                 else:
-                    frequentlyBoughtElName = frequentlyBoughtEl.find("a")
-                    if not(frequentlyBoughtElName is None):
+                    frequently_bought_el_name = frequently_bought_el.find("a")
+                    if not(frequently_bought_el_name is None):
 
                         json_data['frequently_bought_together'][index] = {}
-                        json_data['frequently_bought_together'][index]['name'] = frequentlyBoughtElName.text
+                        json_data['frequently_bought_together'][index]['name'] = frequently_bought_el_name.text
 
-                        frequentlyBoughtElPrice = frequentlyBoughtEl.find("span", {"class": "a-color-price"})
-                        if not(frequentlyBoughtElPrice is None):
-                            json_data['frequently_bought_together'][index]['price'] = frequentlyBoughtElPrice.text
+                        frequently_bought_el_price = frequently_bought_el.find("span", {"class": "a-color-price"})
+                        if not(frequently_bought_el_price is None):
+                            json_data['frequently_bought_together'][index]['price'] = frequently_bought_el_price.text
 
-                        frequentlyBoughtElAvailability = frequentlyBoughtEl.find("span", {"class": "a-size-base a-color-success"})
-                        if not(frequentlyBoughtElAvailability is None):
-                            json_data['frequently_bought_together'][index]['availability'] = frequentlyBoughtElAvailability.text
+                        frequently_bought_el_availability = frequently_bought_el.find("span", {
+                            "class": "a-size-base a-color-success"})
+                        if not(frequently_bought_el_availability is None):
+                            json_data['frequently_bought_together'][index]['availability'] = \
+                                frequently_bought_el_availability.text
 
-                        frequentlyBoughtElMerchant = frequentlyBoughtEl.find("span", {"class": "a-size-base a-color-secondary a-text-normal"})
-                        if not(frequentlyBoughtElMerchant is None):
-                            json_data['frequently_bought_together'][index]['merchant'] = frequentlyBoughtElMerchant.text
+                        frequently_bought_el_merchant = frequently_bought_el.find("span", {
+                            "class": "a-size-base a-color-secondary a-text-normal"})
+                        if not(frequently_bought_el_merchant is None):
+                            json_data['frequently_bought_together'][index]['merchant'] = \
+                                frequently_bought_el_merchant.text
 
                         index += 1
 
-
-    reviewsElBlock = soup.find("div", {"id": "customer-reviews_feature_div"})
-    if not(reviewsElBlock is None):
+    reviews_el_block = soup.find("div", {"id": "customer-reviews_feature_div"})
+    if not(reviews_el_block is None):
         json_data['reviews'] = {}
         index = 1
 
-        for reviewsEl in reviewsElBlock.select('div[id*="rev-"]'):
-            if not(reviewsEl is None):
+        for reviews_el in reviews_el_block.select('div[id*="rev-"]'):
+            if not(reviews_el is None):
                 json_data['reviews'][index] = {}
 
-                reviewRatingEl = reviewsEl.select("a:nth-of-type(1)")[0]
-                if not(reviewRatingEl is None):
-                    json_data['reviews'][index]['review_rating'] = str(reviewRatingEl.attrs['title']).strip()
+                review_rating_el = reviews_el.select("a:nth-of-type(1)")[0]
+                if not(review_rating_el is None):
+                    json_data['reviews'][index]['review_rating'] = str(review_rating_el.attrs['title']).strip()
 
-                reviewByEl = reviewsEl.select("a:nth-of-type(3)")[0]
-                if not(reviewByEl is None):
-                    json_data['reviews'][index]['reviewed_by'] = str(reviewByEl.text).strip()
+                review_by_el = reviews_el.select("a:nth-of-type(3)")[0]
+                if not(review_by_el is None):
+                    json_data['reviews'][index]['reviewed_by'] = str(review_by_el.text).strip()
 
-                reviewedOnEl = reviewByEl.find_next("span")
-                if not(reviewedOnEl is None):
-                    json_data['reviews'][index]['reviewed_on'] = str(reviewedOnEl.text).strip().lstrip('on ')
+                reviewed_on_el = review_by_el.find_next("span")
+                if not(reviewed_on_el is None):
+                    json_data['reviews'][index]['reviewed_on'] = str(reviewed_on_el.text).strip().lstrip('on ')
 
-                reviewDataEl = reviewsEl.select('div[id*="revData-"]')[0].find("div")
-                if not(reviewDataEl is None):
-                    json_data['reviews'][index]['text'] = str(reviewDataEl.text).strip()
+                review_data_el = reviews_el.select('div[id*="revData-"]')[0].find("div")
+                if not(review_data_el is None):
+                    json_data['reviews'][index]['text'] = str(review_data_el.text).strip()
                     index += 1
 
-
-    detailsElBlock = soup.find("table", {"id": "productDetails_detailBullets_sections1"})
-    if not(detailsElBlock is None):
+    details_el_block = soup.find("table", {"id": "productDetails_detailBullets_sections1"})
+    if not(details_el_block is None):
         json_data['details'] = {}
         pattern = re.compile("review", flags=re.IGNORECASE)
 
-        for detailsEl in detailsElBlock.find_all("tr"):
-            if not(detailsEl is None):
+        for details_el in details_el_block.find_all("tr"):
+            if not(details_el is None):
 
-                detailKeyEl = detailsEl.find("th")
-                detailValueEl = detailsEl.find("td")
+                detail_key_el = details_el.find("th")
+                detail_value_el = details_el.find("td")
 
-                if not(detailKeyEl is None) and not(detailValueEl is None) and (pattern.search(detailKeyEl.text) is None):
-                    json_data['details'][str(detailKeyEl.text).strip()] = str(detailValueEl.text).strip()
+                if not(detail_key_el is None) and not(detail_value_el is None) and \
+                        (pattern.search(detail_key_el.text) is None):
+                    json_data['details'][str(detail_key_el.text).strip()] = str(detail_value_el.text).strip()
 
-
-    competitorsElBlock = soup.find("div", {"id": "mbc"})
-    if not(competitorsElBlock is None):
+    competitors_el_block = soup.find("div", {"id": "mbc"})
+    if not(competitors_el_block is None):
         json_data['competitors'] = {}
         index = 1
 
-        for competitorEl in competitorsElBlock.find_all("div", {"class": "mbc-offer-row"}):
-            if not(competitorEl is None):
+        for competitor_el in competitors_el_block.find_all("div", {"class": "mbc-offer-row"}):
+            if not(competitor_el is None):
 
                 json_data['competitors'][index] = {}
 
-                competitorPriceEl = competitorEl.find("span", {"class": "a-color-price"})
-                if not(competitorPriceEl is None):
-                    json_data['competitors'][index]['price'] = str(competitorPriceEl.text).strip()
+                competitor_price_el = competitor_el.find("span", {"class": "a-color-price"})
+                if not(competitor_price_el is None):
+                    json_data['competitors'][index]['price'] = str(competitor_price_el.text).strip()
 
-                competitorNameEl = competitorEl.find("span", {"class": "mbcMerchantName"})
-                if not(competitorNameEl is None):
-                    json_data['competitors'][index]['merchant'] = str(competitorNameEl.text).strip()
+                competitor_name_el = competitor_el.find("span", {"class": "mbcMerchantName"})
+                if not(competitor_name_el is None):
+                    json_data['competitors'][index]['merchant'] = str(competitor_name_el.text).strip()
                     index += 1
 
     json_data['ASIN'] = json_data['details']['ASIN']
@@ -247,21 +258,21 @@ def get_customer_questions(asin):
     soup = BeautifulSoup(data, 'html.parser')
     json_data = {}
 
-    questionsElRow = soup.find("div", {"class": "askTeaserQuestions"})
+    questions_row_el = soup.find("div", {"class": "askTeaserQuestions"})
 
-    if not(questionsElRow is None):
+    if not(questions_row_el is None):
         index = 1
 
-        for questionEl in questionsElRow.select('div[id*="question"]'):
+        for question_el in questions_row_el.select('div[id*="question"]'):
             json_data[index] = {}
-            json_data[index]['question'] = str(questionEl.text).strip().lstrip('Question:').lstrip()
-            answerEl = questionEl.find_next_sibling("div")
+            json_data[index]['question'] = str(question_el.text).strip().lstrip('Question:').lstrip()
+            answer_el = question_el.find_next_sibling("div")
 
-            if not(answerEl is None):
-                answerText = answerEl.select("span:nth-of-type(2)")[0]
-                answeredBy = answerEl.select("span:nth-of-type(3)")[0]
-                json_data[index]['answer'] = str(answerText.text).strip()
-                json_data[index]['answered_by'] = str(answeredBy.text).strip()
+            if not(answer_el is None):
+                answer_text = answer_el.select("span:nth-of-type(2)")[0]
+                answered_by = answer_el.select("span:nth-of-type(3)")[0]
+                json_data[index]['answer'] = str(answer_text.text).strip()
+                json_data[index]['answered_by'] = str(answered_by.text).strip()
 
             index += 1
 
