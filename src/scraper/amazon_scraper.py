@@ -10,7 +10,23 @@ import locale
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 
-def scrape_amazon_site(public_key, private_key, associate_tag, url):
+def get_page_by_url(url):
+    headers = {
+        'User-Agent': 'Mozilla/5.0'
+    }
+
+    r = requests.get(url.strip(), headers=headers)
+
+    return r.text
+
+
+def scrape_amazon_site(public_key, private_key, associate_tag, format, url):
+
+    json_data = {}
+    data = {
+        'id': '',
+        'scraped_data': ''
+    }
 
     # url = 'http://www.amazon.com/dp/B0047E0EII/ref=azfs_379213722_HutzlerBananaSlicer_1'
     # url = 'http://www.amazon.com/Apple-MMGG2LL-MacBook-13-3-Inch-VERSION/dp/B01EIUP20U/ref=
@@ -18,16 +34,15 @@ def scrape_amazon_site(public_key, private_key, associate_tag, url):
     # url = 'http://www.amazon.com/Harry-Potter-Sorcerers-Stone-Illustrated/dp/0545790352/ref=
     # sr_1_5?s=books&ie=UTF8&qid=1463325600&sr=1-5&keywords=harry+potter'
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0'
-    }
+    if format == 'url':
+        page_data = get_page_by_url(url)
+    else:
+        return data
 
-    r = requests.get(url.strip(), headers=headers)
+    if page_data is None:
+        return data
 
-    data = r.text
-
-    soup = BeautifulSoup(data, 'html.parser')
-    json_data = {}
+    soup = BeautifulSoup(page_data, 'html.parser')
 
     title_el = soup.find("span", {"id": "productTitle"})
     if not(title_el is None):
@@ -251,9 +266,10 @@ def scrape_amazon_site(public_key, private_key, associate_tag, url):
     json_data['questions'] = get_customer_questions(json_data['ASIN'])
     json_data['UPC'] = get_product_upc(public_key, private_key, associate_tag, json_data['ASIN'])
 
-    data = {}
-    data['id'] = json_data['UPC']
-    data['scraped_data'] = json_data
+    data = {
+        'id': json_data['UPC'],
+        'scraped_data': json_data
+    }
 
     return data
 
@@ -299,6 +315,7 @@ def get_product_upc(public_key, private_key, associate_tag, asin):
 
     response = requests.get(url)
     xml = minidom.parseString(response.text.encode('utf-8'))
+    # print xml.toprettyxml()
     upc_el = xml.getElementsByTagName('UPC')
 
     return upc_el[0].firstChild.nodeValue

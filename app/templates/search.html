@@ -6,6 +6,13 @@
     <form action="" method="post" name="search">
         {{ form.hidden_tag() }}
         <p>
+            Please select a product format<br>
+            {{ form.product_format }}
+            {% for error in form.product_format.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}<br>
+        </p>
+        <p>
             Please enter your product url<br>
             {{ form.product(size=80) }}
             {% for error in form.product.errors %}
