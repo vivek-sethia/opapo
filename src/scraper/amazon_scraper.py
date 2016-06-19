@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
 from src.vendor.aws_signed_request import aws_signed_request
 from xml.dom import minidom
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 import requests
 import json
@@ -20,7 +22,27 @@ def get_page_by_url(url):
     return r.text
 
 
-def scrape_amazon_site(public_key, private_key, associate_tag, format, url):
+def get_page_by_asin(asin):
+    browser = webdriver.PhantomJS()
+    browser.get('http://www.amazon.com')
+
+    element = browser.find_element_by_name("field-keywords")
+    element.send_keys(asin)
+    browser.find_element_by_css_selector('.nav-search-submit').click()
+    html_source = browser.page_source
+
+    browser.quit()
+
+    soup = BeautifulSoup(html_source, 'html.parser')
+
+    results_el = soup.find('a', {'class': 's-access-detail-page'})
+
+    if not (results_el is None):
+        url = results_el.attrs["href"]
+        return get_page_by_url(url)
+
+
+def scrape_amazon_site(public_key, private_key, associate_tag, format, product_id):
 
     json_data = {}
     data = {
@@ -35,9 +57,12 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, url):
     # sr_1_5?s=books&ie=UTF8&qid=1463325600&sr=1-5&keywords=harry+potter'
 
     if format == 'url':
-        page_data = get_page_by_url(url)
+        page_data = get_page_by_url(product_id)
     else:
-        return data
+        if format == 'asin':
+            page_data = get_page_by_asin(product_id)
+        else:
+            return data
 
     if page_data is None:
         return data
