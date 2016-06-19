@@ -26,12 +26,12 @@ def get_page_by_url(url):
     return r.text
 
 
-def get_page_by_asin(asin):
+def get_page_by_code(code):
     browser = webdriver.PhantomJS()
     browser.get('http://www.amazon.com')
 
     element = browser.find_element_by_name("field-keywords")
-    element.send_keys(asin)
+    element.send_keys(code)
     browser.find_element_by_css_selector('.nav-search-submit').click()
     html_source = browser.page_source
 
@@ -63,8 +63,8 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
     if format == 'url':
         page_data = get_page_by_url(product_id)
     else:
-        if format == 'asin':
-            page_data = get_page_by_asin(product_id)
+        if format == 'asin' or format == 'upc':
+            page_data = get_page_by_code(product_id)
         else:
             return data
 
@@ -232,7 +232,8 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
 
                 review_rating_el = reviews_el.select("a:nth-of-type(1)")[0]
                 if not(review_rating_el is None):
-                    json_data['reviews'][index]['review_rating'] = review_rating_el.attrs['title'].encode('utf-8').strip()
+                    json_data['reviews'][index]['review_rating'] = \
+                        review_rating_el.attrs['title'].encode('utf-8').strip()
 
                 review_by_el = reviews_el.select("a:nth-of-type(3)")[0]
                 if not(review_by_el is None):
