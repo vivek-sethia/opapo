@@ -12,6 +12,10 @@ import locale
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
 
 
+def get_text(element):
+    return element.text.encode('utf-8').strip()
+
+
 def get_page_by_url(url):
     headers = {
         'User-Agent': 'Mozilla/5.0'
@@ -71,21 +75,21 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
 
     title_el = soup.find("span", {"id": "productTitle"})
     if not(title_el is None):
-        json_data['title'] = title_el.text.encode('utf-8').strip()
+        json_data['title'] = get_text(title_el)
 
     price_el = soup.find("span", {"id": "priceblock_ourprice"})
     if not(price_el is None):
-        json_data['price'] = str(price_el.text).strip()
+        json_data['price'] = get_text(price_el)
 
     shipping_el = soup.find("span", {"id": "ourprice_shippingmessage"})
     if not(shipping_el is None):
-        json_data['shipping'] = str(shipping_el.text).strip().lstrip('&').strip()
+        json_data['shipping'] = get_text(shipping_el).lstrip('&').strip()
 
     json_data['rating'] = {}
 
     rating_el = soup.find("div", {"id": "avgRating"})
     if not(rating_el is None):
-        json_data['rating']['average'] = str(rating_el.text).strip()
+        json_data['rating']['average'] = get_text(rating_el)
 
     review_count_el = soup.find("span", {"id": "acrCustomerReviewText"})
     if not(review_count_el is None):
@@ -119,7 +123,7 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
             author_el = author_row_el.find("span")
 
             if not(author_el is None):
-                json_data['author'] = str(author_el.text).strip().rstrip("(Author)").strip()
+                json_data['author'] = get_text(author_el).rstrip("(Author)").strip()
 
     merchant_row_el = soup.find("div", {"id": "merchant-info"})
     if not(merchant_row_el is None):
@@ -133,14 +137,14 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
         savings_el = savings_row_el.find("td", {"class": "a-color-price"})
 
         if not(savings_el is None):
-            json_data['savings'] = str(savings_el.text).strip()
+            json_data['savings'] = get_text(savings_el)
 
     availability_row_el = soup.find("div", {"id": "availability"})
     if not(availability_row_el is None):
         availability_el = availability_row_el.find("span")
 
         if not(availability_el is None):
-            json_data['availability'] = str(availability_el.text).strip()
+            json_data['availability'] = get_text(availability_el)
 
     features_row_el = soup.find("div", {"id": "feature-bullets"})
     if not(features_row_el is None):
@@ -157,7 +161,7 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
         promotion_el = promotions_row_el.find("li")
 
         if not(promotion_el is None):
-            json_data['promotion'] = str(promotion_el.text).strip()
+            json_data['promotion'] = get_text(promotion_el)
 
     similar_items_el_block = soup.find("div", {"id": "purchase-sims-feature"})
     if not(similar_items_el_block is None):
@@ -228,19 +232,19 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
 
                 review_rating_el = reviews_el.select("a:nth-of-type(1)")[0]
                 if not(review_rating_el is None):
-                    json_data['reviews'][index]['review_rating'] = str(review_rating_el.attrs['title']).strip()
+                    json_data['reviews'][index]['review_rating'] = review_rating_el.attrs['title'].encode('utf-8').strip()
 
                 review_by_el = reviews_el.select("a:nth-of-type(3)")[0]
                 if not(review_by_el is None):
-                    json_data['reviews'][index]['reviewed_by'] = str(review_by_el.text).strip()
+                    json_data['reviews'][index]['reviewed_by'] = get_text(review_by_el)
 
                 reviewed_on_el = review_by_el.find_next("span")
                 if not(reviewed_on_el is None):
-                    json_data['reviews'][index]['reviewed_on'] = str(reviewed_on_el.text).strip().lstrip('on ')
+                    json_data['reviews'][index]['reviewed_on'] = get_text(reviewed_on_el).lstrip('on ')
 
                 review_data_el = reviews_el.select('div[id*="revData-"]')[0].find("div")
                 if not(review_data_el is None):
-                    json_data['reviews'][index]['text'] = str(review_data_el.text).strip()
+                    json_data['reviews'][index]['text'] = get_text(review_data_el)
                     index += 1
 
     details_el_block = soup.find("table", {"id": "productDetails_detailBullets_sections1"})
@@ -256,7 +260,7 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
 
                 if not(detail_key_el is None) and not(detail_value_el is None) and \
                         (pattern.search(detail_key_el.text) is None):
-                    json_data['details'][str(detail_key_el.text).strip()] = str(detail_value_el.text).strip()
+                    json_data['details'][get_text(detail_key_el)] = get_text(detail_value_el)
 
     competitors_el_block = soup.find("div", {"id": "mbc"})
     if not(competitors_el_block is None):
@@ -278,11 +282,11 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
                     competitor_price = locale.atof(competitor_price)
                     sum += competitor_price
                     json_data['other_sellers']['details'][index]['price_num'] = competitor_price
-                    json_data['other_sellers']['details'][index]['price'] = str(competitor_price_el.text).strip()
+                    json_data['other_sellers']['details'][index]['price'] = get_text(competitor_price_el)
 
                 competitor_name_el = competitor_el.find("span", {"class": "mbcMerchantName"})
                 if not(competitor_name_el is None):
-                    json_data['other_sellers']['details'][index]['merchant'] = str(competitor_name_el.text).strip()
+                    json_data['other_sellers']['details'][index]['merchant'] = get_text(competitor_name_el)
                     index += 1
 
         json_data['other_sellers']['average_price'] = round(sum/(index-1), 4)
@@ -316,14 +320,14 @@ def get_customer_questions(asin):
 
         for question_el in questions_row_el.select('div[id*="question"]'):
             json_data[index] = {}
-            json_data[index]['question'] = str(question_el.text).strip().lstrip('Question:').lstrip()
+            json_data[index]['question'] = get_text(question_el).lstrip('Question:').lstrip()
             answer_el = question_el.find_next_sibling("div")
 
             if not(answer_el is None):
                 answer_text = answer_el.select("span:nth-of-type(2)")[0]
                 answered_by = answer_el.select("span:nth-of-type(3)")[0]
-                json_data[index]['answer'] = str(answer_text.text).strip()
-                json_data[index]['answered_by'] = str(answered_by.text).strip()
+                json_data[index]['answer'] = get_text(answer_text)
+                json_data[index]['answered_by'] = get_text(answered_by)
 
             index += 1
 
