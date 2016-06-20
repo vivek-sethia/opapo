@@ -27,17 +27,10 @@ def get_page_by_url(url):
 
 
 def get_page_by_code(code):
-    browser = webdriver.PhantomJS()
-    browser.get('http://www.amazon.com')
 
-    element = browser.find_element_by_name("field-keywords")
-    element.send_keys(code)
-    browser.find_element_by_css_selector('.nav-search-submit').click()
-    html_source = browser.page_source
+    url = 'https://www.amazon.com/s/ref=nb_sb_noss?field-keywords=' + code
 
-    browser.quit()
-
-    soup = BeautifulSoup(html_source, 'html.parser')
+    soup = BeautifulSoup(get_page_by_url(url), 'html.parser')
 
     results_el = soup.find('a', {'class': 's-access-detail-page'})
 
@@ -48,7 +41,9 @@ def get_page_by_code(code):
 
 def scrape_amazon_site(public_key, private_key, associate_tag, format, product_id):
 
-    json_data = {}
+    json_data = {
+        'details': {}
+    }
     data = {
         'id': '',
         'scraped_data': ''
@@ -64,6 +59,7 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
         page_data = get_page_by_url(product_id)
     else:
         if format == 'asin' or format == 'upc':
+            json_data['details']['ASIN'] = product_id
             page_data = get_page_by_code(product_id)
         else:
             return data
@@ -250,7 +246,6 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
 
     details_el_block = soup.find("table", {"id": "productDetails_detailBullets_sections1"})
     if not(details_el_block is None):
-        json_data['details'] = {}
         pattern = re.compile("review", flags=re.IGNORECASE)
 
         for details_el in details_el_block.find_all("tr"):
@@ -346,6 +341,6 @@ def get_product_upc(public_key, private_key, associate_tag, asin):
     response = requests.get(url)
     xml = minidom.parseString(response.text.encode('utf-8'))
     # print xml.toprettyxml()
-    upc_el = xml.getElementsByTagName('UPC')
+    upc_el = xml.getElementsByTagName('UPC') or xml.getElementsByTagName('EAN')
 
     return upc_el[0].firstChild.nodeValue
