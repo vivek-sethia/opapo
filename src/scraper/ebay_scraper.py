@@ -131,7 +131,7 @@ def scrape_ebay_site(url):
 
                 review_rating_el = reviewsEl.find("div", {"class": "ebay-star-rating"})
                 if not(review_rating_el is None):
-                    json_data['reviews'][index]['rating'] = review_rating_el.attrs["title"].strip()
+                    json_data['reviews'][index]['rating'] = review_rating_el.attrs.get("title", "aria-label").strip()
 
                 review_name_el = reviewsEl.find("p", {"itemprop": "name"})
                 if not(review_name_el is None):
