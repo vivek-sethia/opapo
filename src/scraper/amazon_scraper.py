@@ -285,7 +285,7 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
                     json_data['other_sellers']['details'][index]['merchant'] = get_text(competitor_name_el)
                     index += 1
 
-        json_data['other_sellers']['average_price'] = round(sum/(index-1), 4)
+                json_data['other_sellers']['average_price'] = round(sum/(index-1), 4)
 
     json_data['ASIN'] = json_data['details']['ASIN']
     json_data['questions'] = get_customer_questions(json_data['ASIN'])
