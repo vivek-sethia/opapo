@@ -65,11 +65,11 @@
                         <ul>
                            <li><strong>Features</strong></li>
                            <li class="header_row">
-                              <img src="../static/amazon.png"/>
+                              <img src="../static/img/amazon.png"/>
                            </li>
                            <li>4000</li>
                            <li>In Stock<a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
-                           <li><img src="../static/yes.png"/></li>
+                           <li><img src="../static/img/yes.png"/></li>
                         </ul>
                      </div>
                      <!--/ column-->
@@ -86,7 +86,7 @@
                         <ul>
                            <li><strong>Features</strong></li>
                            <li class="header_row">
-                              <img src="../static/ebay.png"/>
+                              <img src="../static/img/ebay.png"/>
                            </li>
                            <li>3000</li>
                            <li>In Stock<a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
@@ -108,7 +108,7 @@
             <!-- DONUT CHART BLOCK -->
             <div class="col-sm-3 col-lg-3">
                <div class="dash-unit">
-                  <dtitle>Site Bandwidth</dtitle>
+                  <dtitle>Reviews</dtitle>
                   <hr>
                   <div id="load"></div>
                   <h2>45%</h2>
@@ -117,7 +117,7 @@
             <!-- DONUT CHART BLOCK -->
             <div class="col-sm-3 col-lg-3">
                <div class="dash-unit">
-                  <dtitle>Disk Space</dtitle>
+                  <dtitle>Reviews</dtitle>
                   <hr>
                   <div id="space"></div>
                   <h2>65%</h2>
@@ -151,42 +151,40 @@
                  }
 
                  info = new Highcharts.Chart({
-                 chart: {
-                     renderTo: 'load',
-                     margin: [0, 0, 0, 0],
-                     backgroundColor: null,
-                     plotBackgroundColor: 'none'
+                     chart: {
+                         renderTo: 'load',
+                         margin: [0, 0, 0, 0],
+                         backgroundColor: null,
+                         plotBackgroundColor: 'none'
 
-                 },
+                     },
 
-                 title: {
-                     text: null
-                 },
+                     title: {
+                         text: null
+                     },
 
-                 tooltip: {
-                     formatter: function() {
-                         return this.point.name + ': ' + this.y + ' %';
+                     tooltip: {
+                         formatter: function() {
+                             return this.point.name + ': ' + this.y + ' %';
 
-                     }
-                 },
-                 series: [{
-                     borderWidth: 2,
-                     borderColor: '#F1F3EB',
-                     shadow: false,
-                     type: 'pie',
-                     name: 'Income',
-                     innerSize: '65%',
-                     data: ratings,
-                     dataLabels: {
-                         enabled: false,
-                         color: '#000000',
-                         connectorColor: '#000000'
-                     }
-                 }]
+                         }
+                     },
+                     series: [{
+                         borderWidth: 2,
+                         borderColor: '#F1F3EB',
+                         shadow: false,
+                         type: 'pie',
+                         name: 'Income',
+                         innerSize: '40%',
+                         data: ratings,
+                         dataLabels: {
+                             enabled: false,
+                             color: '#000000',
+                             connectorColor: '#000000'
+                         }
+                     }]
+                 });
              });
-             });
-
-
          });
 
          /*** second Chart  ***/
@@ -197,8 +195,7 @@
                      renderTo: 'space',
                      margin: [0, 0, 0, 0],
                      backgroundColor: null,
-                     plotBackgroundColor: 'none',
-
+                     plotBackgroundColor: 'none'
                  },
 
                  title: {
@@ -234,7 +231,6 @@
                      }
                  }]
              });
-
          });
       </script>
    </body>
