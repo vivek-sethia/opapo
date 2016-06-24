@@ -31,7 +31,7 @@
       <!--<script type="text/javascript" src="../static/data.json"></script>-->
    </head>
    <body>
-      <h2>Apple Macbook</h2>
+      <h2 id="title">Apple Macbook</h2>
       <div class="container">
          <div class="row">
             <div class="col-sm-3 col-lg-3">
@@ -90,7 +90,7 @@
                            </li>
                            <li>3000</li>
                            <li>In Stock<a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
-                           <li><img src="../static/yes.png"/></li>
+                           <li><img src="../static/img/yes.png"/></li>
                         </ul>
                      </div>
                      <!--/ column-->
@@ -142,6 +142,10 @@
                  console.log(data);
 
 
+                 /*Set the title of the product*/
+                 $('#title').text(data.amazon.title);
+
+                 /*Format the ratings as per data format of charts*/
                  var ratings = [];
                  for(star in data.amazon.rating.stats) {
                      ratings.push({
