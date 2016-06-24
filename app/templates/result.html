@@ -24,6 +24,18 @@
             text-align: center;
             margin-bottom: 20px;
          }
+         #hosting-table ul li.heading_col{
+            font-weight: bold;
+            font-size: 14px;
+            padding-top: 11px;
+            padding-bottom: 11px;
+        }
+        .prod_img{
+            text-align: center;
+        }
+        .prod_img img{
+            width : 90%;
+        }
       </style>
 
       <!-- Le fav and touch icons -->
@@ -43,9 +55,9 @@
                            <li class="header_row">
                               <h1></h1>
                            </li>
-                           <li>Price</li>
-                           <li>Availability</li>
-                           <li>Shipping availability</li>
+                           <li class="heading_col">Price</li>
+                           <li class="heading_col">Availability</li>
+                           <li class="heading_col">Shipping availability</li>
                            <!-- <li>5 Free Email Accounts</li>
                               <li>5 FTP Accounts <a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">Apply as an art than director Do your</span></span></a></li>
                               <li>Full Privacy</li>
@@ -67,8 +79,8 @@
                            <li class="header_row">
                               <img src="../static/img/amazon.png"/>
                            </li>
-                           <li>4000</li>
-                           <li>In Stock<a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
+                           <li id="amazon_price">0</li>
+                           <li><span id="amazon_availability">In Stock</span><a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
                            <li><img src="../static/img/yes.png"/></li>
                         </ul>
                      </div>
@@ -88,8 +100,8 @@
                            <li class="header_row">
                               <img src="../static/img/ebay.png"/>
                            </li>
-                           <li>3000</li>
-                           <li>In Stock<a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
+                           <li id="ebay_price">0</li>
+                           <li><span id="ebay_availability">In Stock</span><a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
                            <li><img src="../static/img/yes.png"/></li>
                         </ul>
                      </div>
@@ -101,6 +113,28 @@
             </div>
             <!-- /span3 -->
          </div>
+          <div class="row">
+            <!-- DONUT CHART BLOCK -->
+            <div class="col-sm-3 col-lg-3">
+            </div>
+
+            <div class="col-sm-3 col-lg-3">
+               <div class="dash-unit">
+                  <dtitle>Product</dtitle>
+                  <hr>
+                  <div class="prod_img"><img id="amazon_prod_img"/></div>
+               </div>
+            </div>
+
+            <div class="col-sm-3 col-lg-3">
+               <div class="dash-unit">
+                  <dtitle>Product</dtitle>
+                  <hr>
+                 <div class="prod_img"> <img id="ebay_prod_img"/></div>
+               </div>
+            </div>
+         </div>
+
          <div class="row">
             <!-- DONUT CHART BLOCK -->
             <div class="col-sm-3 col-lg-3">
@@ -111,7 +145,7 @@
                   <dtitle>Reviews</dtitle>
                   <hr>
                   <div id="load"></div>
-                  <h2>45%</h2>
+                  <h2 id="amazon_review_count">0</h2>
                </div>
             </div>
             <!-- DONUT CHART BLOCK -->
@@ -120,7 +154,7 @@
                   <dtitle>Reviews</dtitle>
                   <hr>
                   <div id="space"></div>
-                  <h2>65%</h2>
+                  <h2 id="ebay_review_count">0</h2>
                </div>
             </div>
          </div>
@@ -142,8 +176,17 @@
                  console.log(data);
 
 
-                 /*Set the title of the product*/
+                 /*Set the details of the product*/
                  $('#title').text(data.amazon.title);
+
+                 $('#amazon_price').text(data.amazon.price);
+                 $('#amazon_availability').text(data.amazon.availability);
+                 $('#amazon_review_count').text(data.amazon.rating.review_count);
+                 $('#amazon_prod_img').attr('src', data.amazon.image);
+
+                 $('#ebay_price').text(data.ebay.price);
+                 $('#ebay_prod_img').attr('src', data.ebay.image);
+
 
                  /*Format the ratings as per data format of charts*/
                  var ratings = [];
