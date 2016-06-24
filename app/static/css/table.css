@@ -859,7 +859,7 @@ div.box {
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #b2c831), color-stop(1, #a9c600)); /* Chrome 10, Safari */
 }
 
-#hosting-table .table_style4 .column:hover ul li.header_row {
+div:not(:first-child) > #hosting-table .table_style4 .column:hover ul li.header_row {
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6a958e', endColorstr='#3d4f49'); /* IE5.5 - 7 */
 	background-size: 40px 40px;
 	display:block;
