@@ -14,6 +14,3 @@ def scrape_site(public_key, private_key, associate_tag, format, url):
 
     with open('app/data.json', 'w+') as f:
         json.dump(data, f)
-
-    product_data = json.dumps(data, sort_keys=True)
-    return product_data
