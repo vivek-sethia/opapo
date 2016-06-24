@@ -110,11 +110,11 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
 
     brand_el = soup.find("a", {"id": "brand"})
     if not(brand_el is None):
-        json_data['brand'] = brand_el.text
+        json_data['brand'] = get_text(brand_el)
 
-    title_el_block = soup.select('div[id*="Title"]')[0]
-    if not(title_el_block is None):
-        author_row_el = title_el_block.find("span", {"class": "author"})
+    title_el_block = soup.select('div[id*="Title"]')
+    if title_el_block and not(title_el_block is None):
+        author_row_el = title_el_block[0].find("span", {"class": "author"})
 
         if not(author_row_el is None):
             author_el = author_row_el.find("span")
@@ -127,7 +127,7 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
         merchant_el = merchant_row_el.find("a")
 
         if not(merchant_el is None):
-            json_data['merchant'] = merchant_el.text
+            json_data['merchant'] = get_text(merchant_el)
 
     savings_row_el = soup.find("tr", {"id": "regularprice_savings"})
     if not(savings_row_el is None):
@@ -150,7 +150,7 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
 
         for feature_el in features_row_el.find_all("li", {"id": ""}):
             if not(feature_el is None):
-                json_data['features'][index] = feature_el.text
+                json_data['features'][index] = get_text(feature_el)
                 index += 1
 
     promotions_row_el = soup.find("div", {"id": "promotions_feature_div"})
@@ -169,7 +169,7 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
             if not(similar_items_elRow is None):
                 similar_items_el = similar_items_elRow.find(lambda tag: tag.name == 'div' and 'data-rows' in tag.attrs)
                 if not(similar_items_el is None):
-                    json_data['similarItems'][index] = similar_items_el.text
+                    json_data['similarItems'][index] = get_text(similar_items_el)
                     index += 1
 
     categories_el_block = soup.find("div", {"id": "wayfinding-breadcrumbs_feature_div"})
@@ -179,42 +179,42 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
 
         for categories_el in categories_el_block.find_all("li", {"class": ""}):
             if not(categories_el is None):
-                json_data['categories'][index] = categories_el.text
+                json_data['categories'][index] = get_text(categories_el)
                 index += 1
 
     frequently_bought_el_block = soup.find("form", {"id": "sims-fbt-form"})
     if not(frequently_bought_el_block is None):
 
         json_data['frequently_bought_together'] = {}
-        index = 1
+        index = -1
 
         for frequently_bought_el in frequently_bought_el_block.find_all("label"):
             if not(frequently_bought_el is None):
 
-                if index == 1:
+                if index == -1:
                     index += 1
                 else:
                     frequently_bought_el_name = frequently_bought_el.find("a")
                     if not(frequently_bought_el_name is None):
 
                         json_data['frequently_bought_together'][index] = {}
-                        json_data['frequently_bought_together'][index]['name'] = frequently_bought_el_name.text
+                        json_data['frequently_bought_together'][index]['name'] = get_text(frequently_bought_el_name)
 
                         frequently_bought_el_price = frequently_bought_el.find("span", {"class": "a-color-price"})
                         if not(frequently_bought_el_price is None):
-                            json_data['frequently_bought_together'][index]['price'] = frequently_bought_el_price.text
+                            json_data['frequently_bought_together'][index]['price'] = get_text(frequently_bought_el_price)
 
                         frequently_bought_el_availability = frequently_bought_el.find("span", {
                             "class": "a-size-base a-color-success"})
                         if not(frequently_bought_el_availability is None):
                             json_data['frequently_bought_together'][index]['availability'] = \
-                                frequently_bought_el_availability.text
+                                get_text(frequently_bought_el_availability)
 
                         frequently_bought_el_merchant = frequently_bought_el.find("span", {
                             "class": "a-size-base a-color-secondary a-text-normal"})
                         if not(frequently_bought_el_merchant is None):
                             json_data['frequently_bought_together'][index]['merchant'] = \
-                                frequently_bought_el_merchant.text
+                                get_text(frequently_bought_el_merchant)
 
                         index += 1
 
@@ -242,7 +242,9 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
 
                 review_data_el = reviews_el.select('div[id*="revData-"]')[0].find("div")
                 if not(review_data_el is None):
-                    json_data['reviews'][index]['text'] = get_text(review_data_el)
+                    reviews_text = get_text(review_data_el)
+                    json_data['reviews'][index]['text'] = reviews_text
+
                     index += 1
 
     details_el_block = soup.find("table", {"id": "productDetails_detailBullets_sections1"})
@@ -258,6 +260,11 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
                 if not(detail_key_el is None) and not(detail_value_el is None) and \
                         (pattern.search(detail_key_el.text) is None):
                     json_data['details'][get_text(detail_key_el)] = get_text(detail_value_el)
+
+    if json_data['details'].get('ASIN') is None:
+        asin_el = soup.find("input", {"id": "ASIN"})
+        if not(asin_el is None):
+            json_data['details']['ASIN'] = get_text(asin_el)
 
     competitors_el_block = soup.find("div", {"id": "mbc"})
     if not(competitors_el_block is None):
@@ -340,7 +347,7 @@ def get_product_upc(public_key, private_key, associate_tag, asin):
             'ResponseGroup': 'ItemAttributes'}, public_key, private_key, associate_tag)
 
     response = requests.get(url)
-    xml = minidom.parseString(response.text.encode('utf-8'))
+    xml = minidom.parseString(get_text(response))
     # print xml.toprettyxml()
     upc_el = xml.getElementsByTagName('UPC') or xml.getElementsByTagName('EAN')
 
