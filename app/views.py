@@ -29,6 +29,6 @@ def search():
         scrape_site(app.config['PUBLIC_KEY'], app.config['PRIVATE_KEY'], app.config['ASSOCIATE_TAG'],
                     str(form.product_format.data), str(form.product.data))
 
-        return render_template('on-page-opt.html')
+        return render_template('result.html')
 
     return render_template('search.html', title='Product Search', form=form)
