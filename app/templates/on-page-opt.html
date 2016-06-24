@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+   <head>
+      <meta charset="utf-8">
+      <title>BLOCKS - Bootstrap Dashboard Theme</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta name="description" content="">
+      <meta name="author" content="">
+      <!-- Le styles -->
+      <link href="../static/css/bootstrap.css" rel="stylesheet">
+      <link href="../static/css/main.css" rel="stylesheet">
+      <!-- DATA TABLE CSS -->
+      <link href="../static/css/table.css" rel="stylesheet">
+      <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> -->
+      <style type="text/css">
+         body {
+         background-color: #1f1f1f;
+         color : #fff;
+         }
+         #hosting-table .column li:after{
+         content: normal;
+         }
+         h2{
+            text-align: center;
+            margin-bottom: 20px;
+         }
+      </style>
+
+      <!-- Le fav and touch icons -->
+      <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+      <!--<script type="text/javascript" src="../static/data.json"></script>-->
+   </head>
+   <body>
+      <h2>Apple Macbook</h2>
+      <div class="container">
+         <div class="row">
+            <div class="col-sm-3 col-lg-3">
+               <div id="hosting-table">
+                  <div class="table_style4">
+                     <div class="column">
+                        <ul>
+                           <li><strong>Features</strong></li>
+                           <li class="header_row">
+                              <h1></h1>
+                           </li>
+                           <li>Price</li>
+                           <li>Availability</li>
+                           <li>Shipping availability</li>
+                           <!-- <li>5 Free Email Accounts</li>
+                              <li>5 FTP Accounts <a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">Apply as an art than director Do your</span></span></a></li>
+                              <li>Full Privacy</li>
+                              <li class="footer_row"><a href="#" class="hosting-button">Add To Cart</a></li> -->
+                        </ul>
+                     </div>
+                     <!--/ column-->
+                  </div>
+                  <!--/ Table Style-->
+               </div>
+               <!--/ Hosting Table-->
+            </div>
+            <div class="col-sm-3 col-lg-3">
+               <div id="hosting-table" class="hover">
+                  <div class="table_style4">
+                     <div class="column">
+                        <ul>
+                           <li><strong>Features</strong></li>
+                           <li class="header_row">
+                              <img src="../static/amazon.png"/>
+                           </li>
+                           <li>4000</li>
+                           <li>In Stock<a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
+                           <li><img src="../static/yes.png"/></li>
+                        </ul>
+                     </div>
+                     <!--/ column-->
+                  </div>
+                  <!--/ Table Style-->
+               </div>
+               <!--/ Hosting Table-->
+            </div>
+            <!-- /span3 -->
+            <div class="col-sm-3 col-lg-3">
+               <div id="hosting-table" class="hover">
+                  <div class="table_style4">
+                     <div class="column">
+                        <ul>
+                           <li><strong>Features</strong></li>
+                           <li class="header_row">
+                              <img src="../static/ebay.png"/>
+                           </li>
+                           <li>3000</li>
+                           <li>In Stock<a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
+                           <li><img src="../static/yes.png"/></li>
+                        </ul>
+                     </div>
+                     <!--/ column-->
+                  </div>
+                  <!--/ Table Style-->
+               </div>
+               <!--/ Hosting Table-->
+            </div>
+            <!-- /span3 -->
+         </div>
+         <div class="row">
+            <!-- DONUT CHART BLOCK -->
+            <div class="col-sm-3 col-lg-3">
+            </div>
+            <!-- DONUT CHART BLOCK -->
+            <div class="col-sm-3 col-lg-3">
+               <div class="dash-unit">
+                  <dtitle>Site Bandwidth</dtitle>
+                  <hr>
+                  <div id="load"></div>
+                  <h2>45%</h2>
+               </div>
+            </div>
+            <!-- DONUT CHART BLOCK -->
+            <div class="col-sm-3 col-lg-3">
+               <div class="dash-unit">
+                  <dtitle>Disk Space</dtitle>
+                  <hr>
+                  <div id="space"></div>
+                  <h2>65%</h2>
+               </div>
+            </div>
+         </div>
+         <!-- /row -->
+      </div>
+      <!-- /container -->
+      <br>
+      <!-- /footerwrap -->
+      <!-- Le javascript
+         ================================================== -->
+      <!-- Placed at the end of the document so the pages load faster -->
+      <script type="text/javascript" src="../static/js/bootstrap.js"></script>
+      <script type="text/javascript" src="../static/js/highcharts.js"></script>
+      <script type="text/javascript" charset="utf-8">
+             /*** First Chart  ***/
+         $(document).ready(function() {
+
+             $.getJSON("../data.json", function(data) {
+                 console.log(data);
+
+
+                 var ratings = [];
+                 for(star in data.amazon.rating.stats) {
+                     ratings.push({
+                         name: star,
+                         y: parseFloat(data.amazon.rating.stats[star])
+                     })
+                 }
+
+                 info = new Highcharts.Chart({
+                 chart: {
+                     renderTo: 'load',
+                     margin: [0, 0, 0, 0],
+                     backgroundColor: null,
+                     plotBackgroundColor: 'none'
+
+                 },
+
+                 title: {
+                     text: null
+                 },
+
+                 tooltip: {
+                     formatter: function() {
+                         return this.point.name + ': ' + this.y + ' %';
+
+                     }
+                 },
+                 series: [{
+                     borderWidth: 2,
+                     borderColor: '#F1F3EB',
+                     shadow: false,
+                     type: 'pie',
+                     name: 'Income',
+                     innerSize: '65%',
+                     data: ratings,
+                     dataLabels: {
+                         enabled: false,
+                         color: '#000000',
+                         connectorColor: '#000000'
+                     }
+                 }]
+             });
+             });
+
+
+         });
+
+         /*** second Chart  ***/
+
+         $(document).ready(function() {
+             info = new Highcharts.Chart({
+                 chart: {
+                     renderTo: 'space',
+                     margin: [0, 0, 0, 0],
+                     backgroundColor: null,
+                     plotBackgroundColor: 'none',
+
+                 },
+
+                 title: {
+                     text: null
+                 },
+
+                 tooltip: {
+                     formatter: function() {
+                         return this.point.name + ': ' + this.y + ' %';
+
+                     }
+                 },
+                 series: [{
+                     borderWidth: 2,
+                     borderColor: '#F1F3EB',
+                     shadow: false,
+                     type: 'pie',
+                     name: 'SiteInfo',
+                     innerSize: '65%',
+                     data: [{
+                         name: 'Used',
+                         y: 65.0,
+                         color: '#fa1d2d'
+                     }, {
+                         name: 'Rest',
+                         y: 35.0,
+                         color: '#3d3d3d'
+                     }],
+                     dataLabels: {
+                         enabled: false,
+                         color: '#000000',
+                         connectorColor: '#000000'
+                     }
+                 }]
+             });
+
+         });
+      </script>
+   </body>
+</html>
