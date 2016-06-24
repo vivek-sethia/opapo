@@ -94,6 +94,7 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
 
     review_summary_el = soup.find('div', {'id': 'revSum'})
     if not(review_summary_el is None):
+        json_data['rating']['stats'] = {}
 
         for review_row_el in review_summary_el.find_all('tr', {'class': 'a-histogram-row'}):
             if not(review_row_el is None):
@@ -101,7 +102,7 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
                 review_name_el = review_row_el.select("a:nth-of-type(1)")
                 review_rating_el = review_row_el.select("a:nth-of-type(3)")
                 if review_name_el and review_rating_el:
-                    json_data['rating'][review_name_el[0].text] = review_rating_el[0].text
+                    json_data['rating']['stats'][review_name_el[0].text] = review_rating_el[0].text
 
     image_el = soup.find("img", {"id": "landingImage"})
     if not(image_el is None):
