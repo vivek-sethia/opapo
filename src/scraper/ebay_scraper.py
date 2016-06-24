@@ -31,6 +31,7 @@ def scrape_ebay_site_external(upc):
     if not (results_el is None):
         url = results_el[0].attrs["href"]
         ebay_data = scrape_ebay_site(url)
+        ebay_data['scraped_data']['product_link'] = url
         return ebay_data
 
 
@@ -131,7 +132,7 @@ def scrape_ebay_site(url):
 
                 review_rating_el = reviewsEl.find("div", {"class": "ebay-star-rating"})
                 if not(review_rating_el is None):
-                    json_data['reviews'][index]['rating'] = review_rating_el.attrs.get("title", "aria-label").strip()
+                    json_data['reviews'][index]['rating'] = (review_rating_el.attrs.get("title") or review_rating_el.attrs.get("aria-label")).strip()
 
                 review_name_el = reviewsEl.find("p", {"itemprop": "name"})
                 if not(review_name_el is None):

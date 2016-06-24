@@ -36,7 +36,7 @@ def get_page_by_code(code):
 
     if not (results_el is None):
         url = results_el.attrs["href"]
-        return get_page_by_url(url)
+        return url, get_page_by_url(url)
 
 
 def scrape_amazon_site(public_key, private_key, associate_tag, format, product_id):
@@ -57,10 +57,13 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
 
     if format == 'url':
         page_data = get_page_by_url(product_id)
+        json_data['product_link'] = product_id
     else:
         if format == 'asin' or format == 'upc':
             json_data['details']['ASIN'] = product_id
-            page_data = get_page_by_code(product_id)
+            response = get_page_by_code(product_id)
+            json_data['product_link'] = response[0]
+            page_data = response[1]
         else:
             return data
 
