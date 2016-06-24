@@ -75,13 +75,14 @@
                   <div class="table_style4">
                      <div class="column">
                         <ul>
-                           <li><strong>Features</strong></li>
-                           <li class="header_row">
-                              <img src="../static/img/amazon.png"/>
-                           </li>
-                           <li id="amazon_price">0</li>
-                           <li><span id="amazon_availability">In Stock</span><a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
-                           <li><img src="../static/img/yes.png"/></li>
+                            <li><strong>Features</strong></li>
+                            <li class="header_row">
+                                <img src="../static/img/amazon.png"/>
+                            </li>
+                            <li id="amazon_price">0</li>
+                            <li><span id="amazon_availability">In Stock</span><a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
+                            <li><img src="../static/img/yes.png"/></li>
+                            <li class="footer_row"><a id="amazon_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
                         </ul>
                      </div>
                      <!--/ column-->
@@ -96,13 +97,14 @@
                   <div class="table_style4">
                      <div class="column">
                         <ul>
-                           <li><strong>Features</strong></li>
-                           <li class="header_row">
-                              <img src="../static/img/ebay.png"/>
-                           </li>
-                           <li id="ebay_price">0</li>
-                           <li><span id="ebay_availability">In Stock</span><a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
-                           <li><img src="../static/img/yes.png"/></li>
+                            <li><strong>Features</strong></li>
+                            <li class="header_row">
+                                <img src="../static/img/ebay.png"/>
+                            </li>
+                            <li id="ebay_price">0</li>
+                            <li><span id="ebay_availability">In Stock</span><a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
+                            <li><img src="../static/img/yes.png"/></li>
+                            <li class="footer_row"><a id="ebay_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
                         </ul>
                      </div>
                      <!--/ column-->
@@ -122,7 +124,7 @@
                <div class="dash-unit">
                   <dtitle>Product</dtitle>
                   <hr>
-                  <div class="prod_img"><img id="amazon_prod_img"/></div>
+                  <div class="prod_img"><img id="amazon_product_img"/></div>
                </div>
             </div>
 
@@ -130,7 +132,7 @@
                <div class="dash-unit">
                   <dtitle>Product</dtitle>
                   <hr>
-                 <div class="prod_img"> <img id="ebay_prod_img"/></div>
+                 <div class="prod_img"> <img id="ebay_product_img"/></div>
                </div>
             </div>
          </div>
@@ -182,11 +184,12 @@
                  $('#amazon_price').text(data.amazon.price);
                  $('#amazon_availability').text(data.amazon.availability);
                  $('#amazon_review_count').text(data.amazon.rating.review_count);
-                 $('#amazon_prod_img').attr('src', data.amazon.image);
+                 $('#amazon_product_img').attr('src', data.amazon.image);
+                 $('#amazon_product_link').attr('href', data.amazon.product_link);
 
                  $('#ebay_price').text(data.ebay.price);
-                 $('#ebay_prod_img').attr('src', data.ebay.image);
-
+                 $('#ebay_product_img').attr('src', data.ebay.image);
+                 $('#ebay_product_link').attr('href', data.ebay.product_link);
 
                  /*Format the ratings as per data format of charts*/
                  var ratings = [];
