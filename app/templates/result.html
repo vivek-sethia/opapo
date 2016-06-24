@@ -1,287 +1,145 @@
 <!doctype html>
 <html>
-   <head>
-      <meta charset="utf-8">
-      <title>BLOCKS - Bootstrap Dashboard Theme</title>
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="description" content="">
-      <meta name="author" content="">
-      <!-- Le styles -->
-      <link href="../static/css/bootstrap.css" rel="stylesheet">
-      <link href="../static/css/main.css" rel="stylesheet">
-      <!-- DATA TABLE CSS -->
-      <link href="../static/css/table.css" rel="stylesheet">
-      <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> -->
-      <style type="text/css">
-         body {
-         background-color: #1f1f1f;
-         color : #fff;
-         }
-         #hosting-table .column li:after{
-         content: normal;
-         }
-         h2{
-            text-align: center;
-            margin-bottom: 20px;
-         }
-         #hosting-table ul li.heading_col{
-            font-weight: bold;
-            font-size: 14px;
-            padding-top: 11px;
-            padding-bottom: 11px;
-        }
-        .prod_img{
-            text-align: center;
-        }
-        .prod_img img{
-            width : 90%;
-        }
-      </style>
+    <head>
+        <meta charset="utf-8">
+        <title>BLOCKS - Bootstrap Dashboard Theme</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <!-- Bootstrap styles -->
+        <link href="../static/css/vendor/bootstrap.css" rel="stylesheet">
 
-      <!-- Le fav and touch icons -->
-      <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
-      <!--<script type="text/javascript" src="../static/data.json"></script>-->
-   </head>
-   <body>
-      <h2 id="title">Apple Macbook</h2>
-      <div class="container">
-         <div class="row">
-            <div class="col-sm-3 col-lg-3">
-               <div id="hosting-table">
-                  <div class="table_style4">
-                     <div class="column">
-                        <ul>
-                           <li><strong>Features</strong></li>
-                           <li class="header_row">
-                              <h1></h1>
-                           </li>
-                           <li class="heading_col">Price</li>
-                           <li class="heading_col">Availability</li>
-                           <li class="heading_col">Shipping availability</li>
-                           <!-- <li>5 Free Email Accounts</li>
-                              <li>5 FTP Accounts <a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">Apply as an art than director Do your</span></span></a></li>
-                              <li>Full Privacy</li>
-                              <li class="footer_row"><a href="#" class="hosting-button">Add To Cart</a></li> -->
-                        </ul>
-                     </div>
-                     <!--/ column-->
-                  </div>
-                  <!--/ Table Style-->
-               </div>
-               <!--/ Hosting Table-->
+        <!-- Theme CSS -->
+        <link href="../static/css/theme/main.css" rel="stylesheet">
+        <link href="../static/css/theme/table.css" rel="stylesheet">
+
+        <!--Application CSS-->
+        <link href="../static/css/app.css" rel="stylesheet">
+
+        <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> -->
+
+        <!-- Le fav and touch icons -->
+        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    </head>
+    <body>
+        <h2 id="title">Apple Macbook</h2>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-3 col-lg-3">
+                    <div id="hosting-table">
+                        <div class="table_style4">
+                            <div class="column">
+                                <ul>
+                                    <li><strong>Features</strong></li>
+                                    <li class="header_row">
+                                        <h1></h1>
+                                    </li>
+                                    <li class="heading_col">Price</li>
+                                    <li class="heading_col">Availability</li>
+                                    <li class="heading_col">Shipping availability</li>
+                                </ul>
+                            </div>
+                            <!--/ column-->
+                        </div>
+                        <!--/ Table Style-->
+                    </div>
+                    <!--/ Hosting Table-->
+                </div>
+                <div class="col-sm-3 col-lg-3">
+                    <div id="hosting-table" class="hover">
+                        <div class="table_style4">
+                            <div class="column">
+                                <ul>
+                                    <li><strong>Features</strong></li>
+                                    <li class="header_row">
+                                        <img src="../static/img/amazon.png"/>
+                                    </li>
+                                    <li id="amazon_price">0</li>
+                                    <li><span id="amazon_availability">In Stock</span><a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
+                                    <li><img src="../static/img/yes.png"/></li>
+                                    <li class="footer_row"><a id="amazon_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
+                                </ul>
+                            </div>
+                            <!--/ column-->
+                        </div>
+                        <!--/ Table Style-->
+                    </div>
+                    <!--/ Hosting Table-->
+                </div>
+                <!-- /span3 -->
+                <div class="col-sm-3 col-lg-3">
+                    <div id="hosting-table" class="hover">
+                        <div class="table_style4">
+                            <div class="column">
+                                <ul>
+                                    <li><strong>Features</strong></li>
+                                    <li class="header_row">
+                                        <img src="../static/img/ebay.png"/>
+                                    </li>
+                                    <li id="ebay_price">0</li>
+                                    <li><span id="ebay_availability">In Stock</span><a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
+                                    <li><img src="../static/img/yes.png"/></li>
+                                    <li class="footer_row"><a id="ebay_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
+                                </ul>
+                            </div>
+                            <!--/ column-->
+                        </div>
+                        <!--/ Table Style-->
+                    </div>
+                    <!--/ Hosting Table-->
+                </div>
+                <!-- /span3 -->
             </div>
-            <div class="col-sm-3 col-lg-3">
-               <div id="hosting-table" class="hover">
-                  <div class="table_style4">
-                     <div class="column">
-                        <ul>
-                            <li><strong>Features</strong></li>
-                            <li class="header_row">
-                                <img src="../static/img/amazon.png"/>
-                            </li>
-                            <li id="amazon_price">0</li>
-                            <li><span id="amazon_availability">In Stock</span><a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
-                            <li><img src="../static/img/yes.png"/></li>
-                            <li class="footer_row"><a id="amazon_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
-                        </ul>
-                     </div>
-                     <!--/ column-->
-                  </div>
-                  <!--/ Table Style-->
-               </div>
-               <!--/ Hosting Table-->
-            </div>
-            <!-- /span3 -->
-            <div class="col-sm-3 col-lg-3">
-               <div id="hosting-table" class="hover">
-                  <div class="table_style4">
-                     <div class="column">
-                        <ul>
-                            <li><strong>Features</strong></li>
-                            <li class="header_row">
-                                <img src="../static/img/ebay.png"/>
-                            </li>
-                            <li id="ebay_price">0</li>
-                            <li><span id="ebay_availability">In Stock</span><a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
-                            <li><img src="../static/img/yes.png"/></li>
-                            <li class="footer_row"><a id="ebay_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
-                        </ul>
-                     </div>
-                     <!--/ column-->
-                  </div>
-                  <!--/ Table Style-->
-               </div>
-               <!--/ Hosting Table-->
-            </div>
-            <!-- /span3 -->
-         </div>
-          <div class="row">
-            <!-- DONUT CHART BLOCK -->
-            <div class="col-sm-3 col-lg-3">
+            <div class="row">
+                <!-- DONUT CHART BLOCK -->
+                <div class="col-sm-3 col-lg-3"></div>
+                <div class="col-sm-3 col-lg-3">
+                    <div class="dash-unit">
+                        <dtitle>Product</dtitle>
+                        <hr>
+                        <div class="prod_img"><img id="amazon_product_img"/></div>
+                    </div>
+                </div>
+                <div class="col-sm-3 col-lg-3">
+                    <div class="dash-unit">
+                        <dtitle>Product</dtitle>
+                        <hr>
+                        <div class="prod_img"> <img id="ebay_product_img"/></div>
+                    </div>
+                </div>
             </div>
 
-            <div class="col-sm-3 col-lg-3">
-               <div class="dash-unit">
-                  <dtitle>Product</dtitle>
-                  <hr>
-                  <div class="prod_img"><img id="amazon_product_img"/></div>
-               </div>
+            <div class="row">
+                <!-- DONUT CHART BLOCK -->
+                <div class="col-sm-3 col-lg-3"></div>
+                <!-- DONUT CHART BLOCK -->
+                <div class="col-sm-3 col-lg-3">
+                    <div class="dash-unit">
+                        <dtitle>Reviews</dtitle>
+                        <hr>
+                        <div id="load"></div>
+                        <h2 id="amazon_review_count">0</h2>
+                    </div>
+                </div>
+                <!-- DONUT CHART BLOCK -->
+                <div class="col-sm-3 col-lg-3">
+                    <div class="dash-unit">
+                        <dtitle>Reviews</dtitle>
+                        <hr>
+                        <div id="space"></div>
+                        <h2 id="ebay_review_count">0</h2>
+                    </div>
+                </div>
             </div>
-
-            <div class="col-sm-3 col-lg-3">
-               <div class="dash-unit">
-                  <dtitle>Product</dtitle>
-                  <hr>
-                 <div class="prod_img"> <img id="ebay_product_img"/></div>
-               </div>
-            </div>
-         </div>
-
-         <div class="row">
-            <!-- DONUT CHART BLOCK -->
-            <div class="col-sm-3 col-lg-3">
-            </div>
-            <!-- DONUT CHART BLOCK -->
-            <div class="col-sm-3 col-lg-3">
-               <div class="dash-unit">
-                  <dtitle>Reviews</dtitle>
-                  <hr>
-                  <div id="load"></div>
-                  <h2 id="amazon_review_count">0</h2>
-               </div>
-            </div>
-            <!-- DONUT CHART BLOCK -->
-            <div class="col-sm-3 col-lg-3">
-               <div class="dash-unit">
-                  <dtitle>Reviews</dtitle>
-                  <hr>
-                  <div id="space"></div>
-                  <h2 id="ebay_review_count">0</h2>
-               </div>
-            </div>
-         </div>
-         <!-- /row -->
-      </div>
-      <!-- /container -->
-      <br>
-      <!-- /footerwrap -->
-      <!-- Le javascript
-         ================================================== -->
-      <!-- Placed at the end of the document so the pages load faster -->
-      <script type="text/javascript" src="../static/js/bootstrap.js"></script>
-      <script type="text/javascript" src="../static/js/highcharts.js"></script>
-      <script type="text/javascript" charset="utf-8">
-             /*** First Chart  ***/
-         $(document).ready(function() {
-
-             $.getJSON("../data.json", function(data) {
-                 console.log(data);
-
-
-                 /*Set the details of the product*/
-                 $('#title').text(data.amazon.title);
-
-                 $('#amazon_price').text(data.amazon.price);
-                 $('#amazon_availability').text(data.amazon.availability);
-                 $('#amazon_review_count').text(data.amazon.rating.review_count);
-                 $('#amazon_product_img').attr('src', data.amazon.image);
-                 $('#amazon_product_link').attr('href', data.amazon.product_link);
-
-                 $('#ebay_price').text(data.ebay.price);
-                 $('#ebay_product_img').attr('src', data.ebay.image);
-                 $('#ebay_product_link').attr('href', data.ebay.product_link);
-
-                 /*Format the ratings as per data format of charts*/
-                 var ratings = [];
-                 for(star in data.amazon.rating.stats) {
-                     ratings.push({
-                         name: star,
-                         y: parseFloat(data.amazon.rating.stats[star])
-                     })
-                 }
-
-                 info = new Highcharts.Chart({
-                     chart: {
-                         renderTo: 'load',
-                         margin: [0, 0, 0, 0],
-                         backgroundColor: null,
-                         plotBackgroundColor: 'none'
-
-                     },
-
-                     title: {
-                         text: null
-                     },
-
-                     tooltip: {
-                         formatter: function() {
-                             return this.point.name + ': ' + this.y + ' %';
-
-                         }
-                     },
-                     series: [{
-                         borderWidth: 2,
-                         borderColor: '#F1F3EB',
-                         shadow: false,
-                         type: 'pie',
-                         name: 'Income',
-                         innerSize: '65%',
-                         data: ratings,
-                         dataLabels: {
-                             enabled: false,
-                             color: '#000000',
-                             connectorColor: '#000000'
-                         }
-                     }]
-                 });
-             });
-         });
-
-         /*** second Chart  ***/
-
-         $(document).ready(function() {
-             info = new Highcharts.Chart({
-                 chart: {
-                     renderTo: 'space',
-                     margin: [0, 0, 0, 0],
-                     backgroundColor: null,
-                     plotBackgroundColor: 'none'
-                 },
-
-                 title: {
-                     text: null
-                 },
-
-                 tooltip: {
-                     formatter: function() {
-                         return this.point.name + ': ' + this.y + ' %';
-
-                     }
-                 },
-                 series: [{
-                     borderWidth: 2,
-                     borderColor: '#F1F3EB',
-                     shadow: false,
-                     type: 'pie',
-                     name: 'SiteInfo',
-                     innerSize: '65%',
-                     data: [{
-                         name: 'Used',
-                         y: 65.0,
-                         color: '#fa1d2d'
-                     }, {
-                         name: 'Rest',
-                         y: 35.0,
-                         color: '#3d3d3d'
-                     }],
-                     dataLabels: {
-                         enabled: false,
-                         color: '#000000',
-                         connectorColor: '#000000'
-                     }
-                 }]
-             });
-         });
-      </script>
-   </body>
+            <!-- /row -->
+        </div>
+        <!-- /container -->
+        <br>
+        <!-- /footerwrap -->
+        <!-- Le javascript ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script type="text/javascript" src="../static/js/vendor/bootstrap.js"></script>
+        <script type="text/javascript" src="../static/js/vendor/highcharts.js"></script>
+        <script type="text/javascript" charset="utf-8" src="../static/js/app.js"></script>
+    </body>
 </html>

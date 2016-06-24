@@ -58,7 +58,7 @@ h5 {
 	margin-bottom: 30px;
 	padding-bottom:10px;
 	border: 1px solid #383737;
-	background-image:url('../img/sep-half.png');
+	background-image:url('../../img/sep-half.png');
 	background-color: #3d3d3d;
 	color:white;
 	min-height:290px;
@@ -161,7 +161,7 @@ h5 {
 	margin-bottom: 30px;
 	padding-bottom: 4px;
 	border: 1px solid #383737;
-	background-image:url('../img/sep-half.png');
+	background-image:url('../../img/sep-half.png');
 	background-color: #3d3d3d;
 	color:white;
 	height:130px;
@@ -277,7 +277,7 @@ h5 {
 }
 
 .modal-header {
-	background-image:url('../img/sep-half.png');
+	background-image:url('../../img/sep-half.png');
 	background-color: #4f4f4f;
 	color:#fff;
 }
@@ -771,7 +771,7 @@ a:hover {
 #footerwrap {
     width: 100%;
     background:#262626;
-	background-image:url('../img/sep-half.png');
+	background-image:url('../../img/sep-half.png');
     padding-top:25px;
     padding-bottom: 40px;
 	border-top-style: solid;

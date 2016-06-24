@@ -1,0 +1,28 @@
+body {
+    background-color: #1f1f1f;
+    color : #fff;
+}
+
+#hosting-table .column li:after {
+    content: normal;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#hosting-table ul li.heading_col {
+    font-weight: bold;
+    font-size: 14px;
+    padding-top: 11px;
+    padding-bottom: 11px;
+}
+
+.prod_img{
+    text-align: center;
+}
+
+.prod_img img{
+    width : 90%;
+}
