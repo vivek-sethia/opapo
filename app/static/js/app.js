@@ -8,7 +8,7 @@ $(document).ready(function() {
 
     $.getJSON("../data.json", function(data) {
 
-        var ratings = [], amazon_chart, ebay_chart;
+        var star, ratings = [], amazon_chart, ebay_chart, amazon_avg_rating;
 
         console.log(data);
 
@@ -24,11 +24,15 @@ $(document).ready(function() {
         $('#amazon_product_img').attr('src', data.amazon.image);
         $('#amazon_product_link').attr('href', data.amazon.product_link);
 
+        amazon_avg_rating = (parseFloat(data.amazon.rating.average.trim('out of 5 stars'))/5)*100;
+        $('.amazon_features .star-ratings-sprite-rating').css('width', amazon_avg_rating);
+
         $('#ebay_price').text(data.ebay.price);
 
         if(isInStock(data.ebay.availability || '')) {
             $('#ebay_availability').attr('src', '../static/img/yes.png');
         }
+        $('#ebay_review_count').text(data.ebay.rating.review_count);
         $('#ebay_product_img').attr('src', data.ebay.image);
         $('#ebay_product_link').attr('href', data.ebay.product_link);
 
@@ -105,6 +109,68 @@ $(document).ready(function() {
                     connectorColor: '#000000'
                 }
             }]
+        });
+
+        $('#container').highcharts({
+            chart: {
+                type: 'scatter',
+                zoomType: 'xy'
+            },
+            title: {
+                text: 'Rating Versus Sentiment'
+            },
+            subtitle: {
+                text: 'Latest 30 reviews'
+            },
+            xAxis: {
+                title: {
+                    enabled: true,
+                    text: 'Sentiment ()'
+                },
+                startOnTick: true,
+                endOnTick: true,
+                showLastLabel: true
+            },
+            yAxis: {
+                title: {
+                    text: 'Rating (star)'
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'left',
+                verticalAlign: 'top',
+                x: 100,
+                y: 70,
+                floating: true,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF',
+                borderWidth: 1
+            },
+            plotOptions: {
+                scatter: {
+                    marker: {
+                        radius: 5,
+                        states: {
+                            hover: {
+                                enabled: true,
+                                lineColor: 'rgb(100,100,100)'
+                            }
+                        }
+                    },
+                    states: {
+                        hover: {
+                            marker: {
+                                enabled: false
+                            }
+                        }
+                    },
+                    tooltip: {
+                        headerFormat: '<b>{series.name}</b><br>'
+                        //pointFormat: '{point.x} cm, {point.y} kg'
+                    }
+                }
+            },
+            series: data.amazon.review_sentiments
         });
     });
 });

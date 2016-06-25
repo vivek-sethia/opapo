@@ -332,11 +332,11 @@ def get_customer_reviews(soup):
     json_data = {
         'reviews': [],
         'sentiments': [
-            {'name': '1star', 'data': []},
-            {'name': '2star', 'data': []},
-            {'name': '3star', 'data': []},
-            {'name': '4star', 'data': []},
-            {'name': '5star', 'data': []}
+            {'name': '1 star', 'data': []},
+            {'name': '2 star', 'data': []},
+            {'name': '3 star', 'data': []},
+            {'name': '4 star', 'data': []},
+            {'name': '5 star', 'data': []}
         ]
     }
 
@@ -386,14 +386,14 @@ def get_reviews_by_page(review_link_href, page, reviews, sentiments):
                     reviews[index]['review_rating'] = review_rating
 
                     if '1.0' in review_rating:
-                        sentiments[0]['data'].append([1.0, review_sentiment['compound']])
+                        sentiments[0]['data'].append([review_sentiment['compound'], 1.0])
                     if '2.0' in review_rating:
-                        sentiments[1]['data'].append([2.0, review_sentiment['compound']])
+                        sentiments[1]['data'].append([review_sentiment['compound'], 2.0])
                     if '3.0' in review_rating:
-                        sentiments[2]['data'].append([3.0, review_sentiment['compound']])
+                        sentiments[2]['data'].append([review_sentiment['compound'], 3.0])
                     if '4.0' in review_rating:
-                        sentiments[3]['data'].append([4.0, review_sentiment['compound']])
+                        sentiments[3]['data'].append([review_sentiment['compound'], 4.0])
                     if '5.0' in review_rating:
-                        sentiments[4]['data'].append([5.0, review_sentiment['compound']])
+                        sentiments[4]['data'].append([review_sentiment['compound'], 5.0])
 
                     index += 1
