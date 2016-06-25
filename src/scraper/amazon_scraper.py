@@ -3,6 +3,7 @@ from src.vendor.aws_signed_request import aws_signed_request
 from xml.dom import minidom
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from vaderSentiment.vaderSentiment import sentiment
 
 import requests
 import json
@@ -148,13 +149,11 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
 
     features_row_el = soup.find("div", {"id": "feature-bullets"})
     if not(features_row_el is None):
-        json_data['features'] = {}
-        index = 1
+        json_data['features'] = []
 
         for feature_el in features_row_el.find_all("li", {"id": ""}):
             if not(feature_el is None):
-                json_data['features'][index] = get_text(feature_el)
-                index += 1
+                json_data['features'].append(get_text(feature_el))
 
     promotions_row_el = soup.find("div", {"id": "promotions_feature_div"})
     if not(promotions_row_el is None):
@@ -165,30 +164,26 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
 
     similar_items_el_block = soup.find("div", {"id": "purchase-sims-feature"})
     if not(similar_items_el_block is None):
-        json_data['similarItems'] = {}
-        index = 1
+        json_data['similarItems'] = []
 
         for similar_items_elRow in similar_items_el_block.find_all("li"):
             if not(similar_items_elRow is None):
                 similar_items_el = similar_items_elRow.find(lambda tag: tag.name == 'div' and 'data-rows' in tag.attrs)
                 if not(similar_items_el is None):
-                    json_data['similarItems'][index] = get_text(similar_items_el)
-                    index += 1
+                    json_data['similarItems'].append(get_text(similar_items_el))
 
     categories_el_block = soup.find("div", {"id": "wayfinding-breadcrumbs_feature_div"})
     if not(categories_el_block is None):
-        json_data['categories'] = {}
-        index = 1
+        json_data['categories'] = []
 
         for categories_el in categories_el_block.find_all("li", {"class": ""}):
             if not(categories_el is None):
-                json_data['categories'][index] = get_text(categories_el)
-                index += 1
+                json_data['categories'].append(get_text(categories_el))
 
     frequently_bought_el_block = soup.find("form", {"id": "sims-fbt-form"})
     if not(frequently_bought_el_block is None):
 
-        json_data['frequently_bought_together'] = {}
+        json_data['frequently_bought_together'] = []
         index = -1
 
         for frequently_bought_el in frequently_bought_el_block.find_all("label"):
@@ -200,7 +195,7 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
                     frequently_bought_el_name = frequently_bought_el.find("a")
                     if not(frequently_bought_el_name is None):
 
-                        json_data['frequently_bought_together'][index] = {}
+                        json_data['frequently_bought_together'].append({})
                         json_data['frequently_bought_together'][index]['name'] = get_text(frequently_bought_el_name)
 
                         frequently_bought_el_price = frequently_bought_el.find("span", {"class": "a-color-price"})
@@ -220,35 +215,6 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
                                 get_text(frequently_bought_el_merchant)
 
                         index += 1
-
-    reviews_el_block = soup.find("div", {"id": "customer-reviews_feature_div"})
-    if not(reviews_el_block is None):
-        json_data['reviews'] = {}
-        index = 1
-
-        for reviews_el in reviews_el_block.select('div[id*="rev-"]'):
-            if not(reviews_el is None):
-                json_data['reviews'][index] = {}
-
-                review_rating_el = reviews_el.select("a:nth-of-type(1)")[0]
-                if not(review_rating_el is None):
-                    json_data['reviews'][index]['review_rating'] = \
-                        review_rating_el.attrs['title'].encode('utf-8').strip()
-
-                review_by_el = reviews_el.select("a:nth-of-type(3)")[0]
-                if not(review_by_el is None):
-                    json_data['reviews'][index]['reviewed_by'] = get_text(review_by_el)
-
-                reviewed_on_el = review_by_el.find_next("span")
-                if not(reviewed_on_el is None):
-                    json_data['reviews'][index]['reviewed_on'] = get_text(reviewed_on_el).lstrip('on ')
-
-                review_data_el = reviews_el.select('div[id*="revData-"]')[0].find("div")
-                if not(review_data_el is None):
-                    reviews_text = get_text(review_data_el)
-                    json_data['reviews'][index]['text'] = reviews_text
-
-                    index += 1
 
     details_el_block = soup.find("table", {"id": "productDetails_detailBullets_sections1"})
     if not(details_el_block is None):
@@ -272,15 +238,15 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
     competitors_el_block = soup.find("div", {"id": "mbc"})
     if not(competitors_el_block is None):
         json_data['other_sellers'] = {}
-        json_data['other_sellers']['details'] = {}
+        json_data['other_sellers']['details'] = []
         json_data['other_sellers']['average_price'] = 0
-        index = 1
+        index = 0
         sum = 0
 
         for competitor_el in competitors_el_block.find_all("div", {"class": "mbc-offer-row"}):
             if not(competitor_el is None):
 
-                json_data['other_sellers']['details'][index] = {}
+                json_data['other_sellers']['details'].append({})
 
                 competitor_price_el = competitor_el.find("span", {"class": "a-color-price"})
                 if not(competitor_price_el is None):
@@ -296,7 +262,11 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
                     json_data['other_sellers']['details'][index]['merchant'] = get_text(competitor_name_el)
                     index += 1
 
-                json_data['other_sellers']['average_price'] = round(sum/(index-1), 4)
+                json_data['other_sellers']['average_price'] = round(sum/index, 4)
+
+    result = get_customer_reviews(soup)
+    json_data['reviews'] = result[0]
+    json_data['review_sentiments'] = result[1]
 
     json_data['ASIN'] = json_data['details']['ASIN']
     json_data['questions'] = get_customer_questions(json_data['ASIN'])
@@ -318,15 +288,15 @@ def get_customer_questions(asin):
     data = r.text
 
     soup = BeautifulSoup(data, 'html.parser')
-    json_data = {}
+    json_data = []
 
     questions_row_el = soup.find("div", {"class": "askTeaserQuestions"})
 
     if not(questions_row_el is None):
-        index = 1
+        index = 0
 
         for question_el in questions_row_el.select('div[id*="question"]'):
-            json_data[index] = {}
+            json_data.append({})
             json_data[index]['question'] = get_text(question_el).lstrip('Question:').lstrip()
             answer_el = question_el.find_next_sibling("div")
 
@@ -355,3 +325,75 @@ def get_product_upc(public_key, private_key, associate_tag, asin):
     upc_el = xml.getElementsByTagName('UPC') or xml.getElementsByTagName('EAN')
 
     return upc_el[0].firstChild.nodeValue
+
+
+def get_customer_reviews(soup):
+
+    json_data = {
+        'reviews': [],
+        'sentiments': [
+            {'name': '1star', 'data': []},
+            {'name': '2star', 'data': []},
+            {'name': '3star', 'data': []},
+            {'name': '4star', 'data': []},
+            {'name': '5star', 'data': []}
+        ]
+    }
+
+    reviews_el_block = soup.find("div", {"id": "customer-reviews_feature_div"})
+    if not(reviews_el_block is None):
+
+        review_link_block_el = reviews_el_block.find("div", {"id": "revF"})
+        if not(review_link_block_el is None):
+
+            review_link_el = review_link_block_el.find("a")
+            if not(review_link_el is None):
+
+                review_link_href = review_link_el.attrs['href']
+
+                for page in range(1, 4):
+                    get_reviews_by_page(review_link_href, page, json_data['reviews'], json_data['sentiments'])
+
+    return json_data['reviews'], json_data['sentiments']
+
+
+def get_reviews_by_page(review_link_href, page, reviews, sentiments):
+
+    review_link_href = review_link_href + '&pageNumber=' + str(page)
+    index = (page - 1) * 10
+
+    review_page_data = BeautifulSoup(get_page_by_url(review_link_href), 'html.parser')
+
+    review_container_el = review_page_data.find("div", {"id": "cm_cr-review_list"})
+    if not(review_container_el is None):
+
+        for reviews_el in review_container_el.find_all("div", {"class": "review"}):
+            if not(reviews_el is None):
+
+                reviews.append({})
+
+                review_data_el = reviews_el.find("span", {"class": "review-text"})
+                review_rating_el = reviews_el.find("i", {"class": "review-rating"}).find("span")
+
+                if not(review_data_el is None) and not(review_rating_el is None):
+
+                    reviews_text = get_text(review_data_el)
+                    reviews[index]['text'] = reviews_text
+                    review_sentiment = sentiment(reviews_text)
+                    reviews[index]['sentiment'] = review_sentiment
+
+                    review_rating = get_text(review_rating_el)
+                    reviews[index]['review_rating'] = review_rating
+
+                    if '1.0' in review_rating:
+                        sentiments[0]['data'].append([1.0, review_sentiment['compound']])
+                    if '2.0' in review_rating:
+                        sentiments[1]['data'].append([2.0, review_sentiment['compound']])
+                    if '3.0' in review_rating:
+                        sentiments[2]['data'].append([3.0, review_sentiment['compound']])
+                    if '4.0' in review_rating:
+                        sentiments[3]['data'].append([4.0, review_sentiment['compound']])
+                    if '5.0' in review_rating:
+                        sentiments[4]['data'].append([5.0, review_sentiment['compound']])
+
+                    index += 1
