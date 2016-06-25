@@ -82,16 +82,13 @@ $(document).ready(function() {
                 innerSize: '65%',
                 data: [{
                     name: 'Used',
-                    y: 65.0,
-                    color: '#fa1d2d'
+                    y: 65.0
                 }, {
                     name: 'Rest',
-                    y: 35.0,
-                    color: '#3d3d3d'
+                    y: 35.0
                 }],
                 dataLabels: {
                     enabled: false,
-                    color: '#000000',
                     connectorColor: '#000000'
                 }
             }]
