@@ -1,145 +1,129 @@
-<!doctype html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <title>BLOCKS - Bootstrap Dashboard Theme</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="">
-        <meta name="author" content="">
-        <!-- Bootstrap styles -->
-        <link href="../static/css/vendor/bootstrap.css" rel="stylesheet">
+<!-- extend base layout -->
+{% extends "base.html" %}
 
-        <!-- Theme CSS -->
-        <link href="../static/css/theme/main.css" rel="stylesheet">
-        <link href="../static/css/theme/table.css" rel="stylesheet">
+{% block content %}
+    <h2 id="title">Apple Macbook</h2>
+    <div class="search">
+        <a href="/search">Back to Search</a>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-3 col-lg-3">
 
-        <!--Application CSS-->
-        <link href="../static/css/app.css" rel="stylesheet">
-
-        <!-- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script> -->
-
-        <!-- Le fav and touch icons -->
-        <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
-    </head>
-    <body>
-        <h2 id="title">Apple Macbook</h2>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-3 col-lg-3">
-                    <div id="hosting-table">
-                        <div class="table_style4">
-                            <div class="column">
-                                <ul>
-                                    <li><strong>Features</strong></li>
-                                    <li class="header_row">
-                                        <h1></h1>
-                                    </li>
-                                    <li class="heading_col">Price</li>
-                                    <li class="heading_col">Availability</li>
-                                    <li class="heading_col">Shipping availability</li>
-                                </ul>
-                            </div>
-                            <!--/ column-->
+                <div id="hosting-table">
+                    <div class="table_style4">
+                        <div class="column">
+                            <ul>
+                                <li><strong>Features</strong></li>
+                                <li class="header_row">
+                                    <h1></h1>
+                                </li>
+                                <li class="heading_col">Price</li>
+                                <li class="heading_col">Availability</li>
+                                <li class="heading_col">Shipping availability</li>
+                            </ul>
                         </div>
-                        <!--/ Table Style-->
+                        <!--/ column-->
                     </div>
-                    <!--/ Hosting Table-->
+                    <!--/ Table Style-->
                 </div>
-                <div class="col-sm-3 col-lg-3">
-                    <div id="hosting-table" class="hover">
-                        <div class="table_style4">
-                            <div class="column">
-                                <ul>
-                                    <li><strong>Features</strong></li>
-                                    <li class="header_row">
-                                        <img src="../static/img/amazon.png"/>
-                                    </li>
-                                    <li id="amazon_price">0</li>
-                                    <li><span id="amazon_availability">In Stock</span><a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
-                                    <li><img src="../static/img/yes.png"/></li>
-                                    <li class="footer_row"><a id="amazon_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
-                                </ul>
-                            </div>
-                            <!--/ column-->
+                <!--/ Hosting Table-->
+            </div>
+            <div class="col-sm-3 col-lg-3">
+                <div id="hosting-table" class="hover">
+                    <div class="table_style4">
+                        <div class="column">
+                            <ul>
+                                <li><strong>Features</strong></li>
+                                <li class="header_row">
+                                    <img src="../static/img/amazon.png"/>
+                                </li>
+                                <li id="amazon_price">0</li>
+                                <li><span id="amazon_availability">In Stock</span><a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
+                                    <li><img class="available" src="../static/img/yes.png"/></li>
+                                <li class="footer_row"><a id="amazon_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
+                            </ul>
                         </div>
-                        <!--/ Table Style-->
+                        <!--/ column-->
                     </div>
-                    <!--/ Hosting Table-->
+                    <!--/ Table Style-->
                 </div>
-                <!-- /span3 -->
-                <div class="col-sm-3 col-lg-3">
-                    <div id="hosting-table" class="hover">
-                        <div class="table_style4">
-                            <div class="column">
-                                <ul>
-                                    <li><strong>Features</strong></li>
-                                    <li class="header_row">
-                                        <img src="../static/img/ebay.png"/>
-                                    </li>
-                                    <li id="ebay_price">0</li>
-                                    <li><span id="ebay_availability">In Stock</span><a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
-                                    <li><img src="../static/img/yes.png"/></li>
-                                    <li class="footer_row"><a id="ebay_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
-                                </ul>
-                            </div>
-                            <!--/ column-->
+                <!--/ Hosting Table-->
+            </div>
+            <!-- /span3 -->
+            <div class="col-sm-3 col-lg-3">
+                <div id="hosting-table" class="hover">
+                    <div class="table_style4">
+                        <div class="column">
+                            <ul>
+                                <li><strong>Features</strong></li>
+                                <li class="header_row">
+                                    <img src="../static/img/ebay.png"/>
+                                </li>
+                                <li id="ebay_price">0</li>
+                                <li><span id="ebay_availability">In Stock</span><a class="tt" href="#">(?)<span class="tooltip"><span class="triangle-obtuse">3</span></span></a></li>
+                                <li><img class="available"  src="../static/img/yes.png"/></li>
+                                <li class="footer_row"><a id="ebay_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
+                            </ul>
                         </div>
-                        <!--/ Table Style-->
+                        <!--/ column-->
                     </div>
-                    <!--/ Hosting Table-->
+                    <!--/ Table Style-->
                 </div>
-                <!-- /span3 -->
+                <!--/ Hosting Table-->
             </div>
-            <div class="row">
-                <!-- DONUT CHART BLOCK -->
-                <div class="col-sm-3 col-lg-3"></div>
-                <div class="col-sm-3 col-lg-3">
-                    <div class="dash-unit">
-                        <dtitle>Product</dtitle>
-                        <hr>
-                        <div class="prod_img"><img id="amazon_product_img"/></div>
-                    </div>
-                </div>
-                <div class="col-sm-3 col-lg-3">
-                    <div class="dash-unit">
-                        <dtitle>Product</dtitle>
-                        <hr>
-                        <div class="prod_img"> <img id="ebay_product_img"/></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <!-- DONUT CHART BLOCK -->
-                <div class="col-sm-3 col-lg-3"></div>
-                <!-- DONUT CHART BLOCK -->
-                <div class="col-sm-3 col-lg-3">
-                    <div class="dash-unit">
-                        <dtitle>Reviews</dtitle>
-                        <hr>
-                        <div id="load"></div>
-                        <h2 id="amazon_review_count">0</h2>
-                    </div>
-                </div>
-                <!-- DONUT CHART BLOCK -->
-                <div class="col-sm-3 col-lg-3">
-                    <div class="dash-unit">
-                        <dtitle>Reviews</dtitle>
-                        <hr>
-                        <div id="space"></div>
-                        <h2 id="ebay_review_count">0</h2>
-                    </div>
-                </div>
-            </div>
-            <!-- /row -->
+            <!-- /span3 -->
         </div>
-        <!-- /container -->
-        <br>
-        <!-- /footerwrap -->
-        <!-- Le javascript ================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
-        <script type="text/javascript" src="../static/js/vendor/bootstrap.js"></script>
-        <script type="text/javascript" src="../static/js/vendor/highcharts.js"></script>
-        <script type="text/javascript" charset="utf-8" src="../static/js/app.js"></script>
-    </body>
-</html>
+        <div class="row">
+            <!-- DONUT CHART BLOCK -->
+            <div class="col-sm-3 col-lg-3"></div>
+            <div class="col-sm-3 col-lg-3">
+                <div class="dash-unit">
+                    <dtitle>Product</dtitle>
+                    <hr>
+                    <div class="prod_img"><img id="amazon_product_img"/></div>
+                </div>
+            </div>
+            <div class="col-sm-3 col-lg-3">
+                <div class="dash-unit">
+                    <dtitle>Product</dtitle>
+                    <hr>
+                    <div class="prod_img"> <img id="ebay_product_img"/></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- DONUT CHART BLOCK -->
+            <div class="col-sm-3 col-lg-3"></div>
+            <!-- DONUT CHART BLOCK -->
+            <div class="col-sm-3 col-lg-3">
+                <div class="dash-unit">
+                    <dtitle>Reviews</dtitle>
+                    <hr>
+                    <div id="load"></div>
+                    <h2 id="amazon_review_count">0</h2>
+                </div>
+            </div>
+            <!-- DONUT CHART BLOCK -->
+            <div class="col-sm-3 col-lg-3">
+                <div class="dash-unit">
+                    <dtitle>Reviews</dtitle>
+                    <hr>
+                    <div id="space"></div>
+                    <h2 id="ebay_review_count">0</h2>
+                </div>
+            </div>
+        </div>
+        <!-- /row -->
+    </div>
+    <!-- /container -->
+    <br>
+    <!-- /footerwrap -->
+    <!-- Le javascript ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="../static/js/vendor/bootstrap.js"></script>
+    <script type="text/javascript" src="../static/js/vendor/highcharts.js"></script>
+    <script type="text/javascript" charset="utf-8" src="../static/js/app.js"></script>
+
+{% endblock %}
