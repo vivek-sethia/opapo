@@ -12,6 +12,20 @@ h2 {
     margin-bottom: 20px;
 }
 
+.search_container > div {
+    border : 1px solid #ffffff;
+    border-radius : 4px;
+    width : 50%;
+}
+
+.search_button {
+    text-align: center;
+}
+
+input#product {
+    border-radius: 4px;
+}
+
 #hosting-table .column li {
     min-height : 4em;
 }
@@ -61,6 +75,10 @@ select {
     margin :1em;
     font-size : 1em;
     font-weight:bold;
+}
+
+.search  .back {
+    font-size : 20px;
 }
 
 a:visited {
@@ -116,5 +134,5 @@ a:visited {
     float: left;
     height: 21px;
     display: block;
-    width: 0%
+    width: 0;
 }

@@ -4,9 +4,9 @@
 {% block content %}
     <div class="page-loader"><img src="../static/img/loader.gif" /></div>
     <h2>Product Search</h2>
-    <div class="container">
+    <div class="container search_container">
         <div class="row">
-            <div class="col-sm-6 col-lg-6">
+            <div class="col-sm-12 col-lg-12">
                 <form action="" method="post" name="search">
                     {{ form.hidden_tag() }}
                     <p>
@@ -23,7 +23,7 @@
                             <span style="color: red;">[{{ error }}]</span>
                         {% endfor %}<br>
                     </p>
-                    <p><div class="col-sm-6 col-lg-6"><input type="submit" id="search" value="Search"></div></p>
+                    <p><div class="col-sm-12 col-lg-12 search_button" ><input type="submit" id="search" value="Search"></div></p>
                 </form>
             </div>
         </div>
