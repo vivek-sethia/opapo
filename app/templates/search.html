@@ -2,23 +2,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Search Product</h1>
-    <form action="" method="post" name="search">
-        {{ form.hidden_tag() }}
-        <p>
-            Please select a product format<br>
-            {{ form.product_format }}
-            {% for error in form.product_format.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}<br>
-        </p>
-        <p>
-            Please enter your product url<br>
-            {{ form.product(size=80) }}
-            {% for error in form.product.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}<br>
-        </p>
-        <p><input type="submit" value="Search"></p>
-    </form>
+    <h2>Search Product</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-lg-6">
+                <form action="" method="post" name="search">
+                    {{ form.hidden_tag() }}
+                    <p>
+                        <div class="col-sm-6 col-lg-6">Product format</div>
+                        <div class="col-sm-6 col-lg-6">{{ form.product_format }}</div>
+                        {% for error in form.product_format.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}<br>
+                    </p>
+                    <p>
+                        <div class="col-sm-6 col-lg-6">Product url</div>
+                        <div class="col-sm-6 col-lg-6">{{ form.product(size=80) }}</div>
+                        {% for error in form.product.errors %}
+                            <span style="color: red;">[{{ error }}]</span>
+                        {% endfor %}<br>
+                    </p>
+                    <p><div class="col-sm-6 col-lg-6"><input type="submit" id="search" value="Search"></div></p>
+                </form>
+            </div>
+        </div>
+    </div>
 {% endblock %}
