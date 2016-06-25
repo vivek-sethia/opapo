@@ -113,9 +113,22 @@ def scrape_ebay_site(url):
                 json_data['payment'][index] = paymentEl.attrs['alt']
                 index += 1
 
-    rating_el = soup.find("a", {"id": "_rvwlnk"})
+    json_data['rating'] = {}
+
+    rating_el = soup.find("span", {"class": "num-of-rewiews"})
     if not (rating_el is None):
-        json_data['rating'] = rating_el.text.strip()
+        review_count_el = rating_el.find("a")
+        if not(review_count_el is None):
+            json_data['rating']['review_count'] = review_count_el.text.strip().rstrip(' rating').rstrip('s')
+
+    if json_data['rating'].get('review_count') is None:
+        rating_el = soup.find("a", {"id": "_rvwlnk"})
+        if not (rating_el is None):
+            json_data['rating']['review_count'] = int(rating_el.text.strip().rstrip(' rating'))
+
+    average_rating_el = soup.find("span", {"class": "review--start--rating"})
+    if not(average_rating_el is None):
+        json_data['rating']['average'] = average_rating_el.text
 
     reviews_el_block = soup.find("div", {"class": "reviews"})
     if not(reviews_el_block is None):
@@ -132,7 +145,7 @@ def scrape_ebay_site(url):
 
                 review_rating_el = reviewsEl.find("div", {"class": "ebay-star-rating"})
                 if not(review_rating_el is None):
-                    json_data['reviews'][index]['rating'] = (review_rating_el.attrs.get("title") or review_rating_el.attrs.get("aria-label")).strip()
+                    json_data['reviews'][index]['review_rating'] = (review_rating_el.attrs.get("title") or review_rating_el.attrs.get("aria-label")).strip()
 
                 review_name_el = reviewsEl.find("p", {"itemprop": "name"})
                 if not(review_name_el is None):
@@ -140,7 +153,7 @@ def scrape_ebay_site(url):
 
                 review_description_el = reviewsEl.find("p", {"itemprop": "reviewBody"})
                 if not(review_description_el is None):
-                    json_data['reviews'][index]['description'] = review_description_el.text.strip()
+                    json_data['reviews'][index]['text'] = review_description_el.text.strip()
 
                 reviewed_on_el = reviewsEl.find("span", {"itemprop": "datePublished"})
                 if not(reviewed_on_el is None):
