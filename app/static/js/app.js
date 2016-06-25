@@ -1,5 +1,11 @@
 /*** First Chart  ***/
 $(document).ready(function() {
+
+    function isInStock(availability) {
+        availability = availability.toLowerCase();
+        return availability && ((availability.indexOf('in stock') !== -1 || availability.indexOf('available') !== -1) && availability.indexOf(' not ') === -1);
+    }
+
     $.getJSON("../data.json", function(data) {
 
         var ratings = [], amazon_chart, ebay_chart;
@@ -10,12 +16,19 @@ $(document).ready(function() {
         $('#title').text(data.amazon.title);
 
         $('#amazon_price').text(data.amazon.price);
-        $('#amazon_availability').text(data.amazon.availability);
+
+        if(isInStock(data.amazon.availability || '')) {
+            $('#amazon_availability').attr('src', '../static/img/yes.png');
+        }
         $('#amazon_review_count').text(data.amazon.rating.review_count);
         $('#amazon_product_img').attr('src', data.amazon.image);
         $('#amazon_product_link').attr('href', data.amazon.product_link);
 
         $('#ebay_price').text(data.ebay.price);
+
+        if(isInStock(data.ebay.availability || '')) {
+            $('#ebay_availability').attr('src', '../static/img/yes.png');
+        }
         $('#ebay_product_img').attr('src', data.ebay.image);
         $('#ebay_product_link').attr('href', data.ebay.product_link);
 
