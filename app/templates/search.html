@@ -9,21 +9,21 @@
             <div class="col-sm-12 col-lg-12">
                 <form action="" method="post" name="search">
                     {{ form.hidden_tag() }}
-                    <p>
+                    <div class="row">
                         <div class="col-sm-6 col-lg-6">Product format</div>
                         <div class="col-sm-6 col-lg-6">{{ form.product_format }}</div>
                         {% for error in form.product_format.errors %}
                             <span style="color: red;">[{{ error }}]</span>
                         {% endfor %}<br>
-                    </p>
-                    <p>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-6 col-lg-6">Product url</div>
                         <div class="col-sm-6 col-lg-6">{{ form.product(size=80) }}</div>
                         {% for error in form.product.errors %}
                             <span style="color: red;">[{{ error }}]</span>
                         {% endfor %}<br>
-                    </p>
-                    <p><div class="col-sm-12 col-lg-12 search_button" ><input type="submit" id="search" value="Search"></div></p>
+                    </div>
+                    <div class="row"><div class="col-sm-12 col-lg-12 search_button" ><input type="submit" id="search" value="Search"></div></div>
                 </form>
             </div>
         </div>
