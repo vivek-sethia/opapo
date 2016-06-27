@@ -616,7 +616,7 @@ div.box {
 
 #hosting-table ul {
 	position:relative;
-	border-bottom:10px solid #000;
+	/*border-bottom:10px solid #000;*/
 } 
 
 
@@ -633,7 +633,7 @@ div.box {
 	font-size: 13px;
 	font-weight: 100;
 	color: #ffffff;
-	background:#353535;
+	/*background:#353535;*/
 /* W3C */
 	/* IE5.5 - 7 */
 	/* IE8 */
@@ -660,7 +660,7 @@ div.box {
 }
 
 #hosting-table .column:first-child ul {
-	border-left:1px solid #b6b6b6;
+	/*border-left:1px solid #b6b6b6;*/
 } 
 
 #hosting-table .column ul li:first-child:after {
@@ -863,7 +863,7 @@ div:not(:first-child) > #hosting-table .table_style4 .column:hover ul li.header_
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6a958e', endColorstr='#3d4f49'); /* IE5.5 - 7 */
 	background-size: 40px 40px;
 	display:block;
-	background-color: #fa1d2d;
+	/*background-color: #fa1d2d;*/
 	background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%,
 					  transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%,
 					  transparent 75%, transparent);

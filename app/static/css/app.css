@@ -32,6 +32,8 @@ input#product {
 
 #hosting-table ul li.heading_col {
     font-weight: bold;
+    border-top-left-radius : 1.5em;
+    border-bottom-left-radius : 1.5em;
 }
 
 .prod_img{
@@ -88,6 +90,39 @@ a:visited {
 .available {
     height : 22px;
     width : 22px;
+}
+#amazon_price, #ebay_price {
+    font-size : 18px;
+    font-weight: bold;
+}
+#amazon_price_cent, #ebay_price_cent {
+    vertical-align: super;
+    padding : 2%;
+    font-size : 14px;
+    font-weight: bold;
+}
+
+#hosting-table .column li.price_row {
+    height: 80px;
+    background-color: #b2c831;
+    color: #fff;
+    font-family: Verdana, Geneva, sans-serif;
+}
+
+.price_col {
+    height : 80px;
+}
+
+.hidden-element {
+    visibility: hidden;
+}
+
+.no-padding {
+    padding : 0 !important;
+}
+
+#hosting-table .table_style4 .column .header-row  {
+    height : 6em;
 }
 
 /* Star Rating CSS */

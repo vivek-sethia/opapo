@@ -8,14 +8,17 @@ $(document).ready(function() {
 
     $.getJSON("../data.json", function(data) {
 
-        var star, ratings = [], amazon_chart, ebay_chart, amazon_avg_rating;
+        var star, price_arr, ratings = [], amazon_chart, ebay_chart, amazon_avg_rating;
 
         console.log(data);
 
         /*Set the details of the product*/
         $('#title').text(data.amazon.title);
 
-        $('#amazon_price').text(data.amazon.price);
+        price_arr = (data.amazon.price).split(".");
+
+        $('#amazon_price').text(price_arr[0]);
+        $('#amazon_price_cent').text(price_arr[1]);
 
         if(isInStock(data.amazon.availability || '')) {
             $('#amazon_availability').attr('src', '../static/img/yes.png');
@@ -27,7 +30,11 @@ $(document).ready(function() {
         amazon_avg_rating = (parseFloat(data.amazon.rating.average.trim('out of 5 stars'))/5)*100;
         $('.amazon_features .star-ratings-sprite-rating').css('width', amazon_avg_rating);
 
-        $('#ebay_price').text(data.ebay.price);
+        price_arr = (data.ebay.price).split(".");
+
+        $('#ebay_price').text(price_arr[0]);
+        $('#ebay_price_cent').text(price_arr[1]);
+
 
         if(isInStock(data.ebay.availability || '')) {
             $('#ebay_availability').attr('src', '../static/img/yes.png');
@@ -75,7 +82,7 @@ $(document).ready(function() {
             }]
         });
 
-        ebay_chart = new Highcharts.Chart({
+        /*ebay_chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'space',
                 margin: [0, 0, 0, 0],
@@ -109,10 +116,11 @@ $(document).ready(function() {
                     connectorColor: '#000000'
                 }
             }]
-        });
+        });*/
 
-        $('#container').highcharts({
+        new Highcharts.Chart({
             chart: {
+                renderTo: 'container',
                 type: 'scatter',
                 zoomType: 'xy'
             },

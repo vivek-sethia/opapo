@@ -8,17 +8,16 @@
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-sm-3 col-lg-3">
+            <div class="no-padding col-sm-2 col-lg-2">
 
                 <div id="hosting-table">
                     <div class="table_style4">
                         <div class="column">
                             <ul>
-                                <li><strong>Features</strong></li>
-                                <li class="header_row">
+                                <li class="hidden-element header-row">
                                     <h1></h1>
                                 </li>
-                                <li class="heading_col">Price</li>
+                                <li class="heading_col price_col">Price</li>
                                 <li class="heading_col">Availability</li>
                                 <li class="heading_col">Shipping availability</li>
                                 <li class="heading_col">Average Rating</li>
@@ -30,16 +29,15 @@
                 </div>
                 <!--/ Hosting Table-->
             </div>
-            <div class="col-sm-3 col-lg-3">
+            <div class="no-padding col-sm-3 col-lg-3">
                 <div id="hosting-table" class="hover amazon_features">
                     <div class="table_style4">
                         <div class="column">
                             <ul>
-                                <li><strong>Features</strong></li>
-                                <li class="header_row">
+                                <li class="header-row">
                                     <img src="../static/img/amazon.png"/>
                                 </li>
-                                <li id="amazon_price">0</li>
+                                <li class="price_row"> <span id="amazon_price">0</span><span id="amazon_price_cent"></span></li>
                                 <li><img id="amazon_availability" class="available" src="../static/img/no.png"/></li>
                                 <li><img class="available" src="../static/img/yes.png"/></li>
                                 <li><div class="star-ratings-sprite"><span class="star-ratings-sprite-rating"></span></div></li>
@@ -53,16 +51,15 @@
                 <!--/ Hosting Table-->
             </div>
             <!-- /span3 -->
-            <div class="col-sm-3 col-lg-3">
+            <div class="no-padding col-sm-3 col-lg-3">
                 <div id="hosting-table" class="hover">
                     <div class="table_style4">
                         <div class="column">
                             <ul>
-                                <li><strong>Features</strong></li>
-                                <li class="header_row">
+                                <li class="header-row">
                                     <img src="../static/img/ebay.png"/>
                                 </li>
-                                <li id="ebay_price">0</li>
+                                <li class="price_row"><span id="ebay_price">0</span><span id="ebay_price_cent"></span></li>
                                 <li><img id="ebay_availability" class="available" src="../static/img/no.png"/></li>
                                 <li><img class="available" src="../static/img/yes.png"/></li>
                                 <li><div class="star-ratings-sprite"><span class="star-ratings-sprite-rating"></span></div></li>
@@ -79,7 +76,7 @@
         </div>
         <div class="row">
             <!-- DONUT CHART BLOCK -->
-            <div class="col-sm-3 col-lg-3"></div>
+            <div class="col-sm-2 col-lg-2"></div>
             <div class="col-sm-3 col-lg-3">
                 <div class="dash-unit">
                     <dtitle>Product</dtitle>
@@ -98,17 +95,17 @@
 
         <div class="row">
             <!-- DONUT CHART BLOCK -->
-            <div class="col-sm-3 col-lg-3"></div>
+            <div class="col-sm-2 col-lg-2"></div>
             <!-- DONUT CHART BLOCK -->
-            <div class="col-sm-3 col-lg-3">
+            <div class="col-sm-6 col-lg-6">
                 <div class="dash-unit">
-                    <dtitle>Reviews</dtitle>
+                    <dtitle> Amazon Reviews</dtitle>
                     <hr>
                     <div id="load"></div>
                     <h2 id="amazon_review_count">0</h2>
                 </div>
             </div>
-            <!-- DONUT CHART BLOCK -->
+            <!-- DONUT CHART BLOCK
             <div class="col-sm-3 col-lg-3">
                 <div class="dash-unit">
                     <dtitle>Reviews</dtitle>
@@ -116,13 +113,13 @@
                     <div id="space"></div>
                     <h2 id="ebay_review_count">0</h2>
                 </div>
-            </div>
+            </div> -->
         </div>
         <!-- /row -->
 
         <div class="row">
             <!-- SCATTER PLOT BLOCK -->
-            <div class="col-sm-3 col-lg-3"></div>
+            <div class="col-sm-2 col-lg-2"></div>
             <!-- SCATTER PLOT BLOCK -->
             <div class="col-sm-6 col-lg-6">
                 <div class="dash-unit">
