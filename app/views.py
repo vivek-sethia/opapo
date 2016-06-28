@@ -7,7 +7,7 @@ import json
 
 @app.route('/')
 def home():
-    return redirect('/search')
+    return render_template('index.html')
 
 
 @app.route('/data.json')
