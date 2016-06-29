@@ -20,6 +20,7 @@
                                 <li class="heading_col price_col">Price</li>
                                 <li class="heading_col">Availability</li>
                                 <li class="heading_col">Shipping availability</li>
+                                <li class="heading_col">Shipping Cost</li>
                                 <li class="heading_col">Average Rating</li>
                             </ul>
                         </div>
@@ -40,6 +41,7 @@
                                 <li class="price_row"> <span id="amazon_price">0</span><span id="amazon_price_cent"></span></li>
                                 <li><img id="amazon_availability" class="available" src="../static/img/no.png"/></li>
                                 <li><img class="available" src="../static/img/yes.png"/></li>
+                                <li><span id="amazon_shipping_cost">0</span></li>
                                 <li><div class="star-ratings-sprite"><span class="star-ratings-sprite-rating"></span></div></li>
                                 <li class="footer_row"><a id="amazon_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
                             </ul>
@@ -62,7 +64,8 @@
                                 <li class="price_row"><span id="ebay_price">0</span><span id="ebay_price_cent"></span></li>
                                 <li><img id="ebay_availability" class="available" src="../static/img/no.png"/></li>
                                 <li><img class="available" src="../static/img/yes.png"/></li>
-                                <li><div class="star-ratings-sprite"><span class="star-ratings-sprite-rating"></span></div></li>
+                                <li><span id="ebay_shipping_cost">0</span></li>
+                                <li>---</li>
                                 <li class="footer_row"><a id="ebay_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
                             </ul>
                         </div>
@@ -99,8 +102,7 @@
             <!-- DONUT CHART BLOCK -->
             <div class="col-sm-6 col-lg-6">
                 <div class="dash-unit">
-                    <dtitle> Amazon Reviews</dtitle>
-                    <hr>
+                    <dtitle> Amazon Review Ratings</dtitle>
                     <div id="load"></div>
                     <h2 id="amazon_review_count">0</h2>
                 </div>
