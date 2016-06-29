@@ -6,6 +6,15 @@ $(document).ready(function() {
         return availability && ((availability.indexOf('in stock') !== -1 || availability.indexOf('available') !== -1) && availability.indexOf(' not ') === -1);
     }
 
+    function getCost(shipping) {
+        var cost;
+        shipping = shipping.toLowerCase();
+        if (shipping && shipping.indexOf('free') !== -1) {
+            cost = 'FREE';
+        }
+        return cost;
+    }
+
     $.getJSON("../data.json", function(data) {
 
         var star, price_arr, ratings = [], amazon_chart, ebay_chart, amazon_avg_rating;
@@ -19,11 +28,12 @@ $(document).ready(function() {
 
         $('#amazon_price').text(price_arr[0]);
         $('#amazon_price_cent').text(price_arr[1]);
+        $('#amazon_shipping_cost').text(getCost(data.amazon.shipping));
 
         if(isInStock(data.amazon.availability || '')) {
             $('#amazon_availability').attr('src', '../static/img/yes.png');
         }
-        $('#amazon_review_count').text(data.amazon.rating.review_count);
+        $('#amazon_review_count').text(data.amazon.rating.review_count + ' reviews');
         $('#amazon_product_img').attr('src', data.amazon.image);
         $('#amazon_product_link').attr('href', data.amazon.product_link);
 
@@ -34,6 +44,7 @@ $(document).ready(function() {
 
         $('#ebay_price').text(price_arr[0]);
         $('#ebay_price_cent').text(price_arr[1]);
+        $('#ebay_shipping_cost').text(data.ebay.shippingCost);
 
 
         if(isInStock(data.ebay.availability || '')) {
@@ -64,6 +75,20 @@ $(document).ready(function() {
             tooltip: {
                 formatter: function() {
                     return this.point.name + ': ' + this.y + ' %';
+                }
+            },
+            legend: {
+                enabled: true,
+                align: 'right',
+                layout: 'vertical',
+                 itemStyle: {
+                    color: 'white',
+                    font: '12pt Trebuchet MS, Verdana, sans-serif'
+                 }
+            },
+            plotOptions: {
+                pie: {
+                    showInLegend: true
                 }
             },
             series: [{
