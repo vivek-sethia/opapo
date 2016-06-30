@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from vaderSentiment.vaderSentiment import sentiment
 from watson_developer_cloud import ToneAnalyzerV3
+from random import randint
 
 import requests
 import json
@@ -12,6 +13,11 @@ import re
 import locale
 
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+user_agents = ['Mozilla/5.0 (Windows; U; Windows NT 6.1; rv:2.2) Gecko/20110201', 'Googlebot/2.1',
+               'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.75.14 (KHTML, like Gecko) '
+               'Version/7.0.3 Safari/7046A194A',
+               'Opera/9.80 (X11; Linux i686; Ubuntu/14.10) Presto/2.12.388 Version/12.16',
+               'Mozilla/5.0 (Windows; U; Win 9x 4.90; SG; rv:1.9.2.4) Gecko/20101104 Netscape/9.1.0285']
 
 
 def get_text(element):
@@ -20,7 +26,7 @@ def get_text(element):
 
 def get_page_by_url(url):
     headers = {
-        'User-Agent': 'Mozilla/5.0'
+        'User-Agent': user_agents[randint(0, 4)]
     }
 
     r = requests.get(url.strip(), headers=headers)
@@ -265,11 +271,7 @@ def scrape_amazon_site(config, format, product_id):
 
                 json_data['other_sellers']['average_price'] = round(sum/index, 4)
 
-    result = get_customer_reviews(soup, config)
-    json_data['reviews'] = result[0]
-    json_data['review_sentiments'] = result[1]
-    json_data['review_tones'] = result[2]
-    json_data['overall_sentiment'] = result[3]
+    json_data.update(get_customer_reviews(soup, config))
 
     json_data['ASIN'] = json_data['details']['ASIN']
     json_data['questions'] = get_customer_questions(json_data['ASIN'])
@@ -361,9 +363,11 @@ def get_customer_reviews(soup, config):
                     all_reviews += result[0]
                     overall_sentiment += result[1]
 
-    json_data['tones'] = get_tone(all_reviews, config)
-    json_data['overall_sentiment'] = overall_sentiment
-    return json_data['reviews'], json_data['sentiments'], json_data['tones'], json_data['overall_sentiment']
+    if all_reviews != '':
+        json_data['tones'] = get_tone(all_reviews, config)
+
+    json_data['overall_sentiment'] = round(overall_sentiment/30, 2)
+    return json_data
 
 
 def get_reviews_by_page(review_link_href, page, reviews, sentiments):
