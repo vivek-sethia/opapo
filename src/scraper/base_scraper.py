@@ -3,10 +3,10 @@ from ebay_scraper import scrape_ebay_site_external
 import json
 
 
-def scrape_site(public_key, private_key, associate_tag, format, url):
+def scrape_site(config, format, url):
     data = {}
 
-    amazon_data = scrape_amazon_site(public_key, private_key, associate_tag, format, url)
+    amazon_data = scrape_amazon_site(config, format, url)
     data['amazon'] = amazon_data['scraped_data']
 
     ebay_data = scrape_ebay_site_external(amazon_data['id'])

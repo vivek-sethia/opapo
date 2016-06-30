@@ -4,6 +4,7 @@ from xml.dom import minidom
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from vaderSentiment.vaderSentiment import sentiment
+from watson_developer_cloud import ToneAnalyzerV3
 
 import requests
 import json
@@ -40,7 +41,7 @@ def get_page_by_code(code):
         return url, get_page_by_url(url)
 
 
-def scrape_amazon_site(public_key, private_key, associate_tag, format, product_id):
+def scrape_amazon_site(config, format, product_id):
 
     json_data = {
         'details': {}
@@ -264,13 +265,14 @@ def scrape_amazon_site(public_key, private_key, associate_tag, format, product_i
 
                 json_data['other_sellers']['average_price'] = round(sum/index, 4)
 
-    result = get_customer_reviews(soup)
+    result = get_customer_reviews(soup, config)
     json_data['reviews'] = result[0]
     json_data['review_sentiments'] = result[1]
+    json_data['review_tones'] = result[2]
 
     json_data['ASIN'] = json_data['details']['ASIN']
     json_data['questions'] = get_customer_questions(json_data['ASIN'])
-    json_data['UPC'] = get_product_upc(public_key, private_key, associate_tag, json_data['ASIN'])
+    json_data['UPC'] = get_product_upc(config, json_data['ASIN'])
 
     data = {
         'id': json_data['UPC'],
@@ -311,13 +313,13 @@ def get_customer_questions(asin):
     return json_data
 
 
-def get_product_upc(public_key, private_key, associate_tag, asin):
+def get_product_upc(config, asin):
 
     # generate signed URL
     url = aws_signed_request('com', {
             'Operation': 'ItemLookup',
             'ItemId': asin,
-            'ResponseGroup': 'ItemAttributes'}, public_key, private_key, associate_tag)
+            'ResponseGroup': 'ItemAttributes'}, config['PUBLIC_KEY'], config['PRIVATE_KEY'], config['ASSOCIATE_TAG'])
 
     response = requests.get(url)
     xml = minidom.parseString(get_text(response))
@@ -327,8 +329,9 @@ def get_product_upc(public_key, private_key, associate_tag, asin):
     return upc_el[0].firstChild.nodeValue
 
 
-def get_customer_reviews(soup):
+def get_customer_reviews(soup, config):
 
+    all_reviews = ''
     json_data = {
         'reviews': [],
         'sentiments': [
@@ -336,7 +339,7 @@ def get_customer_reviews(soup):
             {'name': '2 star', 'data': []},
             {'name': '3 star', 'data': []},
             {'name': '4 star', 'data': []},
-            {'name': '5 star', 'data': []}
+            {'name': '5 star', 'data': []},
         ]
     }
 
@@ -352,13 +355,16 @@ def get_customer_reviews(soup):
                 review_link_href = review_link_el.attrs['href']
 
                 for page in range(1, 4):
-                    get_reviews_by_page(review_link_href, page, json_data['reviews'], json_data['sentiments'])
+                    all_reviews += get_reviews_by_page(review_link_href, page, json_data['reviews'],
+                                                       json_data['sentiments'])
 
-    return json_data['reviews'], json_data['sentiments']
+    json_data['tones'] = get_tone(all_reviews, config)
+    return json_data['reviews'], json_data['sentiments'], json_data['tones']
 
 
 def get_reviews_by_page(review_link_href, page, reviews, sentiments):
 
+    all_reviews = ''
     review_link_href = review_link_href + '&pageNumber=' + str(page)
     index = (page - 1) * 10
 
@@ -379,6 +385,7 @@ def get_reviews_by_page(review_link_href, page, reviews, sentiments):
 
                     reviews_text = get_text(review_data_el)
                     reviews[index]['text'] = reviews_text
+                    all_reviews += reviews_text
                     review_sentiment = sentiment(reviews_text)
                     reviews[index]['sentiment'] = review_sentiment
 
@@ -397,3 +404,15 @@ def get_reviews_by_page(review_link_href, page, reviews, sentiments):
                         sentiments[4]['data'].append([review_sentiment['compound'], 5.0])
 
                     index += 1
+
+    return all_reviews
+
+
+def get_tone(text, config):
+
+    tone_analyzer = ToneAnalyzerV3(
+        username=config['WDC_TA_USER_NAME'],
+        password=config['WDC_TA_PASSWORD'],
+        version=config['WDC_TA_VERSION'])
+
+    return tone_analyzer.tone(text=text)
