@@ -420,9 +420,23 @@ def get_reviews_by_page(review_link_href, page, reviews, sentiments):
 
 def get_tone(text, config):
 
+    tones = {}
     tone_analyzer = ToneAnalyzerV3(
         username=config['WDC_TA_USER_NAME'],
         password=config['WDC_TA_PASSWORD'],
         version=config['WDC_TA_VERSION'])
 
-    return tone_analyzer.tone(text=text)
+    result_tone = tone_analyzer.tone(text=text)
+    if result_tone is not None:
+        tones = {}
+        for category in result_tone['document_tone']['tone_categories']:
+            category_name = category['category_id'].replace('_tone', '')
+            tones[category_name] = {
+                'tone_names': [],
+                'scores': []
+            }
+            for tone in category['tones']:
+                tones[category_name]['tone_names'].append(tone['tone_name'])
+                tones[category_name]['scores'].append(tone['score'])
+
+    return tones

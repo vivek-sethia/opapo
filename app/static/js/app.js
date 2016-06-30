@@ -17,7 +17,7 @@ $(document).ready(function() {
 
     $.getJSON("../data.json", function(data) {
 
-        var star, price_arr, ratings = [], amazon_chart, ebay_chart, amazon_avg_rating;
+        var star, price_arr, ratings = [], amazon_avg_rating;
 
         console.log(data);
 
@@ -55,13 +55,14 @@ $(document).ready(function() {
         $('#ebay_product_link').attr('href', data.ebay.product_link);
 
         /*Format the ratings as per data format of charts*/
-        for(star in data.amazon.rating.stats) {
+        $.each(data.amazon.rating.stats, function(star, rating) {
             ratings.push({
                 name: star,
-                y: parseFloat(data.amazon.rating.stats[star])
+                y: parseFloat(rating)
             })
-        }
+        });
 
+        /*Donut chart for distribution of rating in reviews*/
         new Highcharts.Chart({
             chart: {
                 renderTo: 'load',
@@ -143,6 +144,7 @@ $(document).ready(function() {
             }]
         });*/
 
+        /*Gauge chart for overall sentiment of reviews*/
         new Highcharts.Chart({
             chart: {
                 renderTo: 'container',
@@ -232,5 +234,72 @@ $(document).ready(function() {
                 }
             }]
         });
+
+        if(data.amazon.tones) {
+            $.each(data.amazon.tones, function(toneName, tone) {
+                var title = toneName;
+
+                if(toneName == 'writing')
+                    title = 'language style';
+                else if(toneName == 'social')
+                    title = 'social tendencies';
+
+                /*Horizontal bar chart for various tone categories of reviews*/
+                new Highcharts.Chart({
+                    chart: {
+                        type: 'bar',
+                        renderTo: toneName + '-chart'
+                    },
+                    title: {
+                        text: title.toUpperCase()
+                    },
+                    xAxis: {
+                        categories: tone['tone_names'],
+                        title: {
+                            text: null
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: 'Level',
+                            align: 'high'
+                        },
+                        labels: {
+                            overflow: 'justify'
+                        }
+                    },
+                    tooltip: {
+                        valueSuffix: ''
+                    },
+                    plotOptions: {
+                        bar: {
+                            dataLabels: {
+                                enabled: true
+                            }
+                        }
+                    },
+                    legend: {
+                        enabled: false,
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'top',
+                        x: -40,
+                        y: 80,
+                        floating: true,
+                        borderWidth: 1,
+                        backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+                        shadow: true
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: toneName,
+                        data: tone['scores']
+                    }]
+                });
+            });
+        }
     });
 });
