@@ -269,6 +269,7 @@ def scrape_amazon_site(config, format, product_id):
     json_data['reviews'] = result[0]
     json_data['review_sentiments'] = result[1]
     json_data['review_tones'] = result[2]
+    json_data['overall_sentiment'] = result[3]
 
     json_data['ASIN'] = json_data['details']['ASIN']
     json_data['questions'] = get_customer_questions(json_data['ASIN'])
@@ -332,6 +333,7 @@ def get_product_upc(config, asin):
 def get_customer_reviews(soup, config):
 
     all_reviews = ''
+    overall_sentiment = 0
     json_data = {
         'reviews': [],
         'sentiments': [
@@ -355,16 +357,19 @@ def get_customer_reviews(soup, config):
                 review_link_href = review_link_el.attrs['href']
 
                 for page in range(1, 4):
-                    all_reviews += get_reviews_by_page(review_link_href, page, json_data['reviews'],
-                                                       json_data['sentiments'])
+                    result = get_reviews_by_page(review_link_href, page, json_data['reviews'], json_data['sentiments'])
+                    all_reviews += result[0]
+                    overall_sentiment += result[1]
 
     json_data['tones'] = get_tone(all_reviews, config)
-    return json_data['reviews'], json_data['sentiments'], json_data['tones']
+    json_data['overall_sentiment'] = overall_sentiment
+    return json_data['reviews'], json_data['sentiments'], json_data['tones'], json_data['overall_sentiment']
 
 
 def get_reviews_by_page(review_link_href, page, reviews, sentiments):
 
     all_reviews = ''
+    overall_sentiment = 0
     review_link_href = review_link_href + '&pageNumber=' + str(page)
     index = (page - 1) * 10
 
@@ -391,6 +396,7 @@ def get_reviews_by_page(review_link_href, page, reviews, sentiments):
 
                     review_rating = get_text(review_rating_el)
                     reviews[index]['review_rating'] = review_rating
+                    overall_sentiment += review_sentiment['compound']
 
                     if '1.0' in review_rating:
                         sentiments[0]['data'].append([review_sentiment['compound'], 1.0])
@@ -405,7 +411,7 @@ def get_reviews_by_page(review_link_href, page, reviews, sentiments):
 
                     index += 1
 
-    return all_reviews
+    return all_reviews, overall_sentiment
 
 
 def get_tone(text, config):
