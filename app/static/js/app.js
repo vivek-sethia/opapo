@@ -237,12 +237,22 @@ $(document).ready(function() {
 
         if(data.amazon.tones) {
             $.each(data.amazon.tones, function(toneName, tone) {
-                var title = toneName;
+                var title = toneName, color, colorByPoint = false;
 
-                if(toneName == 'writing')
-                    title = 'language style';
-                else if(toneName == 'social')
-                    title = 'social tendencies';
+                switch(toneName) {
+                    case 'writing':
+                        title = 'language style';
+                        color = '#274b5f';
+                        break;
+                    case 'social':
+                        title = 'social tendencies';
+                        color = '#1cb4a0';
+                        break;
+                    case 'emotion':
+                        color = ['#e80521','#592684', '#325e2b','#ffd629', '#086db2' ];
+                        colorByPoint = true;
+                        break;
+                }
 
                 /*Horizontal bar chart for various tone categories of reviews*/
                 new Highcharts.Chart({
@@ -260,13 +270,17 @@ $(document).ready(function() {
                         }
                     },
                     yAxis: {
+                        gridLineWidth: 0,
+                        minorGridLineWidth: 0,
                         min: 0,
+                        max: 1,
                         title: {
-                            text: 'Level',
+                            text:'',
                             align: 'high'
                         },
                         labels: {
-                            overflow: 'justify'
+                            overflow: 'justify',
+                            enabled: false
                         }
                     },
                     tooltip: {
@@ -277,7 +291,10 @@ $(document).ready(function() {
                             dataLabels: {
                                 enabled: true
                             }
-                        }
+                        },
+                         series: {
+                             colorByPoint: colorByPoint
+                         }
                     },
                     legend: {
                         enabled: false,
@@ -291,12 +308,14 @@ $(document).ready(function() {
                         backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
                         shadow: true
                     },
+                    colors: color,
                     credits: {
                         enabled: false
                     },
                     series: [{
                         name: toneName,
-                        data: tone['scores']
+                        data: tone['scores'],
+                        color: color
                     }]
                 });
             });
