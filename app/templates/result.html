@@ -2,11 +2,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h2 id="title">Apple Macbook</h2>
     <div class="search">
         <a href="/search"><span class="back">&larr;</span><span>Back to Search</span></a>
     </div>
     <div class="container">
+        <div class="row">
+            <div class="no-padding col-sm-2 col-lg-2"></div>
+            <div class="no-padding col-sm-6 col-lg-6 text-center"><h4 id="title"></h4></div>
+        </div>
         <div class="row">
             <div class="no-padding col-sm-2 col-lg-2">
 
@@ -125,7 +128,7 @@
             <!-- SCATTER PLOT BLOCK -->
             <div class="col-sm-6 col-lg-6">
                 <div class="dash-unit">
-                    <dtitle>Amazon Sentiment Analysis</dtitle>
+                    <dtitle>Amazon Overall Sentiment of Reviews</dtitle>
                     <hr>
                     <div id="container" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
                 </div>
