@@ -2,6 +2,9 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
+from vaderSentiment.vaderSentiment import sentiment
+from watson_developer_cloud import ToneAnalyzerV3
+
 
 import requests
 import json
@@ -23,7 +26,7 @@ def get_ebay_page(id):
     return html_source
 
 
-def scrape_ebay_site_external(upc, name):
+def scrape_ebay_site_external(upc, name, config):
     data = {
         'scraped_data': ''
     }
@@ -37,7 +40,7 @@ def scrape_ebay_site_external(upc, name):
 
     if results_el and not (results_el is None):
         url = results_el[0].attrs["href"]
-        ebay_data = scrape_ebay_site(url)
+        ebay_data = scrape_ebay_site(url, config)
         ebay_data['scraped_data']['product_link'] = url
         return ebay_data
     else:
@@ -49,12 +52,12 @@ def scrape_ebay_site_external(upc, name):
 
         if results_el and not (results_el is None):
             url = results_el[0].attrs["href"]
-            ebay_data = scrape_ebay_site(url)
+            ebay_data = scrape_ebay_site(url, config)
             ebay_data['scraped_data']['product_link'] = url
             return ebay_data
 
 
-def scrape_ebay_site(url):
+def scrape_ebay_site(url, config):
 
     # url = 'http://www.ebay.com/itm/Nikon-AF-S-DX-NIKKOR-55-200mm-f-4-5-6G-ED-VR-II-Lens-Factory-Refurbished-/
     # 311498162380?_trkparms=%26rpp_cid%3D5702b40de4b0826387589b2e%26rpp_icid%3D5702cf3fe4b079ecf2fa287f'
@@ -166,6 +169,8 @@ def scrape_ebay_site(url):
     if not(reviews_el_block is None):
         json_data['reviews'] = {}
         index = 1
+        overall_sentiment = 0
+        all_reviews = ''
 
         for reviewsEl in reviews_el_block.find_all("div", {"class": "ebay-review-section"}):
             if not(reviewsEl is None):
@@ -185,7 +190,13 @@ def scrape_ebay_site(url):
 
                 review_description_el = reviewsEl.find("p", {"itemprop": "reviewBody"})
                 if not(review_description_el is None):
-                    json_data['reviews'][index]['text'] = review_description_el.text.strip()
+
+                    reviews_text = review_description_el.text.strip()
+                    json_data['reviews'][index]['text'] = reviews_text
+
+                    review_sentiment = sentiment(reviews_text)
+                    all_reviews += reviews_text
+                    overall_sentiment += review_sentiment['compound']
 
                 reviewed_on_el = reviewsEl.find("span", {"itemprop": "datePublished"})
                 if not(reviewed_on_el is None):
@@ -206,9 +217,37 @@ def scrape_ebay_site(url):
 
                     index += 1
 
+        if all_reviews != '':
+            json_data['tones'] = get_tone(all_reviews, config)
+            json_data['overall_sentiment'] = round(overall_sentiment/index, 2)
+
     data = {
         'scraped_data': json_data
     }
     # print(product_data)
 
     return data
+
+
+def get_tone(text, config):
+
+    tones = {}
+    tone_analyzer = ToneAnalyzerV3(
+        username=config['WDC_TA_USER_NAME'],
+        password=config['WDC_TA_PASSWORD'],
+        version=config['WDC_TA_VERSION'])
+
+    result_tone = tone_analyzer.tone(text=text)
+    if result_tone is not None:
+        tones = {}
+        for category in result_tone['document_tone']['tone_categories']:
+            category_name = category['category_id'].replace('_tone', '')
+            tones[category_name] = {
+                'tone_names': [],
+                'scores': []
+            }
+            for tone in category['tones']:
+                tones[category_name]['tone_names'].append(tone['tone_name'])
+                tones[category_name]['scores'].append(tone['score'])
+
+    return tones
