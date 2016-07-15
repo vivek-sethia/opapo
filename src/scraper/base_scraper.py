@@ -9,7 +9,7 @@ def scrape_site(config, format, url):
     amazon_data = scrape_amazon_site(config, format, url)
     data['amazon'] = amazon_data['scraped_data']
 
-    ebay_data = scrape_ebay_site_external(amazon_data['id'])
+    ebay_data = scrape_ebay_site_external(amazon_data['id'], amazon_data['name'])
     data['ebay'] = ebay_data['scraped_data']
 
     with open('app/data.json', 'w+') as f:

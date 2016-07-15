@@ -54,6 +54,7 @@ def scrape_amazon_site(config, format, product_id):
     }
     data = {
         'id': '',
+        'name': '',
         'scraped_data': ''
     }
 
@@ -207,7 +208,8 @@ def scrape_amazon_site(config, format, product_id):
 
                         frequently_bought_el_price = frequently_bought_el.find("span", {"class": "a-color-price"})
                         if not(frequently_bought_el_price is None):
-                            json_data['frequently_bought_together'][index]['price'] = get_text(frequently_bought_el_price)
+                            json_data['frequently_bought_together'][index]['price'] = \
+                                get_text(frequently_bought_el_price)
 
                         frequently_bought_el_availability = frequently_bought_el.find("span", {
                             "class": "a-size-base a-color-success"})
@@ -279,6 +281,7 @@ def scrape_amazon_site(config, format, product_id):
 
     data = {
         'id': json_data['UPC'],
+        'name': json_data['title'],
         'scraped_data': json_data
     }
 

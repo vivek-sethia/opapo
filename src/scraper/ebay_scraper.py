@@ -5,34 +5,53 @@ from selenium.webdriver.common.keys import Keys
 
 import requests
 import json
+import re
 
 
-def scrape_ebay_site_external(upc):
+def get_ebay_page(id):
+
+    browser = webdriver.PhantomJS()
+    browser.get('http://www.ebay.com')
+
+    element = browser.find_element_by_name("_nkw")
+    element.send_keys(id)
+    browser.find_element_by_css_selector('.gh-td .gh-spr').click()
+    html_source = browser.page_source
+
+    browser.quit()
+
+    return html_source
+
+
+def scrape_ebay_site_external(upc, name):
     data = {
         'scraped_data': ''
     }
     if upc == '':
         return data
 
-    browser = webdriver.PhantomJS()
-    browser.get('http://www.ebay.com')
-
-    element = browser.find_element_by_name("_nkw")
-    element.send_keys(upc)
-    browser.find_element_by_css_selector('.gh-td .gh-spr').click()
-    html_source = browser.page_source
-
-    browser.quit()
-
+    html_source = get_ebay_page(upc)
     soup = BeautifulSoup(html_source, 'html.parser')
 
     results_el = soup.select('a[class="vip"]')
 
-    if not (results_el is None):
+    if results_el and not (results_el is None):
         url = results_el[0].attrs["href"]
         ebay_data = scrape_ebay_site(url)
         ebay_data['scraped_data']['product_link'] = url
         return ebay_data
+    else:
+        name = re.sub('\(.*\)', '', name)
+        html_source = get_ebay_page(name)
+        soup = BeautifulSoup(html_source, 'html.parser')
+
+        results_el = soup.select('a[class="vip"]')
+
+        if results_el and not (results_el is None):
+            url = results_el[0].attrs["href"]
+            ebay_data = scrape_ebay_site(url)
+            ebay_data['scraped_data']['product_link'] = url
+            return ebay_data
 
 
 def scrape_ebay_site(url):
@@ -51,9 +70,10 @@ def scrape_ebay_site(url):
     if not(title_el is None):
         json_data['title'] = title_el.text.strip('Details about')
 
-    price_el = soup.find("span", {"id": "mm-saleDscPrc"}) or soup.find("span", {"id": "prcIsum"})
+    price_el = soup.find("span", {"id": "mm-saleDscPrc"}) or soup.find("span", {"id": "prcIsum"}) or \
+        soup.find("span", {"id": "prcIsum_bidPrice"})
     if not (price_el is None):
-        json_data['price'] = price_el.text.strip()
+        json_data['price'] = price_el.text.strip().lstrip('US ')
 
     savings_el = soup.find("span", {"id": "youSaveSTP"})
     if not (savings_el is None):
@@ -124,11 +144,23 @@ def scrape_ebay_site(url):
     if json_data['rating'].get('review_count') is None:
         rating_el = soup.find("a", {"id": "_rvwlnk"})
         if not (rating_el is None):
-            json_data['rating']['review_count'] = int(rating_el.text.strip().rstrip(' rating'))
+            json_data['rating']['review_count'] = int(rating_el.text.strip().rstrip('s').rstrip(' rating'))
 
-    average_rating_el = soup.find("span", {"class": "review--start--rating"})
+    average_rating_el = soup.find("span", {"class": "review--start--rating"}) or \
+        soup.find("span", {"class": "ebay-review-start-rating"})
     if not(average_rating_el is None):
-        json_data['rating']['average'] = average_rating_el.text
+        json_data['rating']['average'] = average_rating_el.text.strip()
+
+    review_summary_el = soup.find('ul', {'class': 'ebay-review-list'})
+    if not(review_summary_el is None):
+        json_data['rating']['stats'] = {}
+
+        for review_row_el in review_summary_el.find_all('li', {'class': 'ebay-review-item'}):
+            if not(review_row_el is None):
+                review_name_el = review_row_el.find("p", {"class": "ebay-review-item-stars"})
+                review_rating_el = review_row_el.find("div", {"class": "ebay-review-item-r"}).find("span")
+                if review_name_el and review_rating_el:
+                    json_data['rating']['stats'][review_name_el.text + ' star'] = review_rating_el.text
 
     reviews_el_block = soup.find("div", {"class": "reviews"})
     if not(reviews_el_block is None):
