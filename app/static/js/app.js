@@ -41,6 +41,7 @@ $(document).ready(function() {
         $('#amazon_price').text(price_arr[0]);
         $('#amazon_price_cent').text(price_arr[1]);
         $('#amazon_shipping_cost').text(getCost(data.amazon.shipping));
+        $('#amazon_merchant_feedback').text(data.amazon.merchant);
 
         if(isInStock(data.amazon.availability || '')) {
             $('#amazon_availability').attr('src', '../static/img/yes.png');
@@ -62,6 +63,9 @@ $(document).ready(function() {
         $('#ebay_price_cent').text(price_arr[1]);
         $('#ebay_shipping_cost').text(data.ebay.shippingCost);
 
+        if(data.ebay.merchant)
+            $('#ebay_merchant_feedback').text(data.ebay.merchant['name'] + ' (' +
+                data.ebay.merchant['sold_quantity'] + 'items sold & ' + data.ebay.merchant['feedback']+ ')');
 
         if(isInStock(data.ebay.availability || '')) {
             $('#ebay_availability').attr('src', '../static/img/yes.png');
