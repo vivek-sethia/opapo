@@ -21,6 +21,10 @@ $(document).ready(function() {
             rating_stats = {
                 'amazon': {'renderTo': 'amazon_rating_stats', 'data': []},
                 'ebay': {'renderTo': 'ebay_rating_stats', 'data': []}
+            },
+            sentiments = {
+                'amazon': {'renderTo': 'amazon_sentiment_chart', 'data': data.amazon.overall_sentiment || 0},
+                'ebay': {'renderTo': 'ebay_sentiment_chart', 'data': data.ebay.overall_sentiment || 0}
             };
 
         console.log(data);
@@ -137,11 +141,11 @@ $(document).ready(function() {
             });
         });
 
-        if(data.amazon.overall_sentiment) {
+        $.each(sentiments, function(index, sentiment) {
             /*Gauge chart for overall sentiment of reviews*/
             new Highcharts.Chart({
                 chart: {
-                    renderTo: 'container',
+                    renderTo: sentiment['renderTo'],
                     type: 'gauge',
                     plotBackgroundColor: null,
                     plotBackgroundImage: null,
@@ -222,13 +226,13 @@ $(document).ready(function() {
                 },
                 series: [{
                     name: 'Sentiment',
-                    data: [data.amazon.overall_sentiment],
+                    data: [sentiment['data']],
                     tooltip: {
                         valueSuffix: ''
                     }
                 }]
             });
-        }
+        });
 
         if(data.amazon.tones) {
             $.each(data.amazon.tones, function(toneName, tone) {
