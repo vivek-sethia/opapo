@@ -25,6 +25,10 @@ $(document).ready(function() {
             sentiments = {
                 'amazon': {'renderTo': 'amazon_sentiment_chart', 'data': data.amazon.overall_sentiment || 0},
                 'ebay': {'renderTo': 'ebay_sentiment_chart', 'data': data.ebay.overall_sentiment || 0}
+            },
+            tone_details = {
+                'amazon': data.amazon.tones || {},
+                'ebay': data.ebay.tones || {}
             };
 
         console.log(data);
@@ -234,8 +238,8 @@ $(document).ready(function() {
             });
         });
 
-        if(data.amazon.tones) {
-            $.each(data.amazon.tones, function(toneName, tone) {
+        $.each(tone_details, function(index, tones) {
+            $.each(tones, function(toneName, tone) {
                 var title = toneName, color, colorByPoint = false;
 
                 switch(toneName) {
@@ -257,7 +261,7 @@ $(document).ready(function() {
                 new Highcharts.Chart({
                     chart: {
                         type: 'bar',
-                        renderTo: toneName + '-chart'
+                        renderTo: index + '_' + toneName + '_chart'
                     },
                     title: {
                         text: title.toUpperCase()
@@ -318,6 +322,7 @@ $(document).ready(function() {
                     }]
                 });
             });
-        }
+        });
+
     });
 });
