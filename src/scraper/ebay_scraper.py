@@ -102,9 +102,19 @@ def scrape_ebay_site(url, config):
     if not(brand_el is None):
         json_data['brand'] = brand_el.text
 
+    json_data['merchant'] = {}
+
     merchant_el = soup.find("span", {"class": "mbg-nw"})
     if not (merchant_el is None):
-        json_data['merchant'] = merchant_el.text
+        json_data['merchant']['name'] = merchant_el.text.title()
+
+    merchant_sold_quantity = soup.find("span", {"class": "mbg-l"})
+    if not (merchant_sold_quantity is None):
+        json_data['merchant']['sold_quantity'] = merchant_sold_quantity.text.strip().lstrip('(').rstrip(')')
+
+    merchant_feedback = soup.find("div", {"id": "si-fb"})
+    if not (merchant_feedback is None):
+        json_data['merchant']['feedback'] = merchant_feedback.text
 
     savings_el = soup.find("div", {"id": "mm-saleAmtSavedPrc"})
     if not (savings_el is None):
