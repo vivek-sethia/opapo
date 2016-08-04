@@ -485,7 +485,7 @@ digiclock {
 
 
 /**********DONUT CHARTS STYLES**********/
-#amazon_rating_stats, #ebay_rating_stats {
+#amazon_rating_stats, #ebay_rating_stats, #rakuten_rating_stats {
 	width: 100%;
 	height: 15em;
 	-moz-border-radius: 5px;

@@ -95,11 +95,11 @@ a:visited {
     height : 22px;
     width : 22px;
 }
-#amazon_price, #ebay_price {
+#amazon_price, #ebay_price, #rakuten_price {
     font-size : 18px;
     font-weight: bold;
 }
-#amazon_price_cent, #ebay_price_cent {
+#amazon_price_cent, #ebay_price_cent, #rakuten_price_cent {
     vertical-align: super;
     padding : 2%;
     font-size : 14px;

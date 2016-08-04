@@ -2,216 +2,281 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="search">
-        <a href="/search"><span class="back">&larr;</span><span>Back to Search</span></a>
+<div class="search">
+    <a href="/search"><span class="back">&larr;</span><span>Back to Search</span></a>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="no-padding col-sm-2 col-lg-2"></div>
+        <div class="no-padding col-sm-8 col-lg-8 text-center"><h4 id="title"></h4></div>
     </div>
-    <div class="container">
-        <div class="row">
-            <div class="no-padding col-sm-2 col-lg-2"></div>
-            <div class="no-padding col-sm-8 col-lg-8 text-center"><h4 id="title"></h4></div>
-        </div>
-        <div class="row">
-            <div class="no-padding col-sm-2 col-lg-2">
+    <div class="row">
+        <div class="no-padding col-sm-2 col-lg-2">
 
-                <div id="hosting-table">
-                    <div class="table_style4">
-                        <div class="column">
-                            <ul>
-                                <li class="hidden-element header-row">
-                                    <h1></h1>
-                                </li>
-                                <li class="heading_col price_col">Price</li>
-                                <li class="heading_col">Availability</li>
-                                <li class="heading_col">Shipping availability</li>
-                                <li class="heading_col">Shipping Cost</li>
-                                <li class="heading_col">Seller</li>
-                                <li class="heading_col">Average Rating</li>
-                            </ul>
-                        </div>
-                        <!--/ column-->
+            <div id="hosting-table">
+                <div class="table_style4">
+                    <div class="column">
+                        <ul>
+                            <li class="hidden-element header-row">
+                                <h1></h1>
+                            </li>
+                            <li class="heading_col price_col">Price</li>
+                            <li class="heading_col">Availability</li>
+                            <li class="heading_col">Shipping availability</li>
+                            <li class="heading_col">Shipping Cost</li>
+                            <li class="heading_col">Seller</li>
+                            <li class="heading_col">Average Rating</li>
+                        </ul>
                     </div>
-                    <!--/ Table Style-->
+                    <!--/ column-->
                 </div>
-                <!--/ Hosting Table-->
+                <!--/ Table Style-->
             </div>
-            <div class="no-padding col-sm-4 col-lg-4">
-                <div id="hosting-table" class="hover amazon_features">
-                    <div class="table_style4">
-                        <div class="column">
-                            <ul>
-                                <li class="header-row">
-                                    <img src="../static/img/amazon.png"/>
-                                </li>
-                                <li class="price_row"> <span id="amazon_price">0</span><span id="amazon_price_cent"></span></li>
-                                <li><img id="amazon_availability" class="available" src="../static/img/no.png"/></li>
-                                <li><img class="available" src="../static/img/yes.png"/></li>
-                                <li><span id="amazon_shipping_cost">0</span></li>
-                                <li><span id="amazon_merchant_feedback">--</span></li>
-                                <li><div class="star-ratings-sprite"><span class="star-ratings-sprite-rating"></span></div></li>
-                                <li class="footer_row"><a id="amazon_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
-                            </ul>
-                        </div>
-                        <!--/ column-->
+            <!--/ Hosting Table-->
+        </div>
+        <div class="no-padding col-sm-3 col-lg-3">
+            <div id="hosting-table" class="hover amazon_features">
+                <div class="table_style4">
+                    <div class="column">
+                        <ul>
+                            <li class="header-row">
+                                <img src="../static/img/amazon.png"/>
+                            </li>
+                            <li class="price_row"> <span id="amazon_price">0</span><span id="amazon_price_cent"></span></li>
+                            <li><img id="amazon_availability" class="available" src="../static/img/no.png"/></li>
+                            <li><img class="available" src="../static/img/yes.png"/></li>
+                            <li><span id="amazon_shipping_cost">0</span></li>
+                            <li><span id="amazon_merchant_feedback">--</span></li>
+                            <li><div class="star-ratings-sprite"><span class="star-ratings-sprite-rating"></span></div></li>
+                            <li class="footer_row"><a id="amazon_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
+                        </ul>
                     </div>
-                    <!--/ Table Style-->
+                    <!--/ column-->
                 </div>
-                <!--/ Hosting Table-->
+                <!--/ Table Style-->
             </div>
-            <!-- /span3 -->
-            <div class="no-padding col-sm-4 col-lg-4">
-                <div id="hosting-table" class="hover ebay_features">
-                    <div class="table_style4">
-                        <div class="column">
-                            <ul>
-                                <li class="header-row">
-                                    <img src="../static/img/ebay.png"/>
-                                </li>
-                                <li class="price_row"><span id="ebay_price">0</span><span id="ebay_price_cent"></span></li>
-                                <li><img id="ebay_availability" class="available" src="../static/img/no.png"/></li>
-                                <li><img class="available" src="../static/img/yes.png"/></li>
-                                <li><span id="ebay_shipping_cost">0</span></li>
-                                <li><span id="ebay_merchant_feedback">--</span></li>
-                                <li><div class="star-ratings-sprite"><span class="star-ratings-sprite-rating"></span></div></li>
-                                <li class="footer_row"><a id="ebay_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
-                            </ul>
-                        </div>
-                        <!--/ column-->
+            <!--/ Hosting Table-->
+        </div>
+        <!-- /span3 -->
+        <div class="no-padding col-sm-3 col-lg-3">
+            <div id="hosting-table" class="hover ebay_features">
+                <div class="table_style4">
+                    <div class="column">
+                        <ul>
+                            <li class="header-row">
+                                <img src="../static/img/ebay.png"/>
+                            </li>
+                            <li class="price_row"><span id="ebay_price">0</span><span id="ebay_price_cent"></span></li>
+                            <li><img id="ebay_availability" class="available" src="../static/img/no.png"/></li>
+                            <li><img class="available" src="../static/img/yes.png"/></li>
+                            <li><span id="ebay_shipping_cost">0</span></li>
+                            <li><span id="ebay_merchant_feedback">--</span></li>
+                            <li><div class="star-ratings-sprite"><span class="star-ratings-sprite-rating"></span></div></li>
+                            <li class="footer_row"><a id="ebay_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
+                        </ul>
                     </div>
-                    <!--/ Table Style-->
+                    <!--/ column-->
                 </div>
-                <!--/ Hosting Table-->
+                <!--/ Table Style-->
             </div>
-            <!-- /span3 -->
+            <!--/ Hosting Table-->
         </div>
-        <div class="row">
-            <!-- DONUT CHART BLOCK -->
-            <div class="col-sm-2 col-lg-2"></div>
-            <div class="col-sm-4 col-lg-4">
-                <div class="dash-unit">
-                    <dtitle>Product</dtitle>
-                    <hr>
-                    <div class="prod_img"><img id="amazon_product_img"/></div>
+        <div class="no-padding col-sm-3 col-lg-3">
+            <div id="hosting-table" class="hover rakuten_features">
+                <div class="table_style4">
+                    <div class="column">
+                        <ul>
+                            <li class="header-row">
+                                <img src="../static/img/rakuten.png"/>
+                            </li>
+                            <li class="price_row"><span id="rakuten_price">0</span><span id="rakuten_price_cent"></span></li>
+                            <li><img id="rakuten_availability" class="available" src="../static/img/no.png"/></li>
+                            <li><img class="available" src="../static/img/yes.png"/></li>
+                            <li><span id="rakuten_shipping_cost">0</span></li>
+                            <li><span id="rakuten_merchant_feedback">--</span></li>
+                            <li><div class="star-ratings-sprite"><span class="star-ratings-sprite-rating"></span></div></li>
+                            <li class="footer_row"><a id="rakuten_product_link" target="_blank" href="#" class="hosting-button">View Product</a></li>
+                        </ul>
+                    </div>
+                    <!--/ column-->
                 </div>
+                <!--/ Table Style-->
             </div>
-            <div class="col-sm-4 col-lg-4">
-                <div class="dash-unit">
-                    <dtitle>Product</dtitle>
-                    <hr>
-                    <div class="prod_img"> <img id="ebay_product_img"/></div>
-                </div>
-            </div>
+            <!--/ Hosting Table-->
         </div>
-
-        <div class="row">
-            <!-- DONUT CHART BLOCK -->
-            <div class="col-sm-2 col-lg-2"></div>
-            <!-- DONUT CHART BLOCK -->
-            <div class="col-sm-4 col-lg-4">
-                <div class="dash-unit">
-                    <dtitle> Amazon Review Ratings</dtitle>
-                    <div id="amazon_rating_stats"></div>
-                    <h3 id="amazon_review_count">No reviews</h3>
-                </div>
-            </div>
-            <!-- DONUT CHART BLOCK -->
-            <div class="col-sm-4 col-lg-4">
-                <div class="dash-unit">
-                    <dtitle>Ebay Review Ratings</dtitle>
-                    <div id="ebay_rating_stats"></div>
-                    <h3 id="ebay_review_count">No reviews</h3>
-                </div>
-            </div>
-        </div>
-        <!-- /row -->
-
-        <div class="row">
-            <!-- SCATTER PLOT BLOCK -->
-            <div class="col-sm-2 col-lg-2"></div>
-            <!-- SCATTER PLOT BLOCK -->
-            <div class="col-sm-4 col-lg-4">
-                <div class="dash-unit">
-                    <dtitle>Amazon Overall Sentiment of Reviews</dtitle>
-                    <hr>
-                    <div id="amazon_sentiment_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-lg-4">
-                <div class="dash-unit">
-                    <dtitle>Ebay Overall Sentiment of Reviews</dtitle>
-                    <hr>
-                    <div id="ebay_sentiment_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
-            <!-- SCATTER PLOT BLOCK -->
-            <div class="col-sm-2 col-lg-2"></div>
-            <!-- SCATTER PLOT BLOCK -->
-            <div class="col-sm-4 col-lg-4">
-                <div class="dash-unit">
-                    <dtitle>Amazon Tone Analysis for Reviews</dtitle>
-                    <hr>
-                    <div id="amazon_emotion_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-lg-4">
-                <div class="dash-unit">
-                    <dtitle>Ebay Tone Analysis for Reviews</dtitle>
-                    <hr>
-                    <div id="ebay_emotion_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <!-- SCATTER PLOT BLOCK -->
-            <div class="col-sm-2 col-lg-2"></div>
-            <!-- SCATTER PLOT BLOCK -->
-            <div class="col-sm-4 col-lg-4">
-                <div class="dash-unit">
-                    <dtitle>Amazon Tone Analysis for Reviews</dtitle>
-                    <hr>
-                    <div id="amazon_social_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-lg-4">
-                <div class="dash-unit">
-                    <dtitle>Ebay Tone Analysis for Reviews</dtitle>
-                    <hr>
-                    <div id="ebay_social_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <!-- SCATTER PLOT BLOCK -->
-            <div class="col-sm-2 col-lg-2"></div>
-            <!-- SCATTER PLOT BLOCK -->
-            <div class="col-sm-4 col-lg-4">
-                <div class="dash-unit">
-                    <dtitle>Amazon Tone Analysis for Reviews</dtitle>
-                    <hr>
-                    <div id="amazon_writing_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
-                </div>
-            </div>
-            <div class="col-sm-4 col-lg-4">
-                <div class="dash-unit">
-                    <dtitle>Ebay Tone Analysis for Reviews</dtitle>
-                    <hr>
-                    <div id="ebay_writing_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
-                </div>
-            </div>
-        </div>
-
+        <!-- /span3 -->
     </div>
-    <!-- /container -->
-    <br>
-    <!-- /footerwrap -->
-    <!-- Le javascript ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script type="text/javascript" src="../static/js/vendor/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../static/js/vendor/highcharts.js"></script>
-    <script type="text/javascript" src="../static/js/vendor/highcharts-more.js"></script>
-    <script type="text/javascript" src="../static/js/vendor/themes/grid.js"></script>
-    <script type="text/javascript" charset="utf-8" src="../static/js/app.js"></script>
+    <div class="row">
+        <!-- DONUT CHART BLOCK -->
+        <div class="col-sm-2 col-lg-2"></div>
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Product</dtitle>
+                <hr>
+                <div class="prod_img"><img id="amazon_product_img"/></div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Product</dtitle>
+                <hr>
+                <div class="prod_img"> <img id="ebay_product_img"/></div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Product</dtitle>
+                <hr>
+                <div class="prod_img"> <img id="rakuten_product_img"/></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- DONUT CHART BLOCK -->
+        <div class="col-sm-2 col-lg-2"></div>
+        <!-- DONUT CHART BLOCK -->
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle> Amazon Review Ratings</dtitle>
+                <div id="amazon_rating_stats"></div>
+                <h3 id="amazon_review_count">No reviews</h3>
+            </div>
+        </div>
+        <!-- DONUT CHART BLOCK -->
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Ebay Review Ratings</dtitle>
+                <div id="ebay_rating_stats"></div>
+                <h3 id="ebay_review_count">No reviews</h3>
+            </div>
+        </div>
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Rakuten Review Ratings</dtitle>
+                <div id="rakuten_rating_stats"></div>
+                <h3 id="rakuten_review_count">No reviews</h3>
+            </div>
+        </div>
+    </div>
+    <!-- /row -->
+
+    <div class="row">
+        <!-- SCATTER PLOT BLOCK -->
+        <div class="col-sm-2 col-lg-2"></div>
+        <!-- SCATTER PLOT BLOCK -->
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Amazon Overall Sentiment of Reviews</dtitle>
+                <hr>
+                <div id="amazon_sentiment_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Ebay Overall Sentiment of Reviews</dtitle>
+                <hr>
+                <div id="ebay_sentiment_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Rakuten Overall Sentiment of Reviews</dtitle>
+                <hr>
+                <div id="rakuten_sentiment_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- SCATTER PLOT BLOCK -->
+        <div class="col-sm-2 col-lg-2"></div>
+        <!-- SCATTER PLOT BLOCK -->
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Amazon Tone Analysis for Reviews</dtitle>
+                <hr>
+                <div id="amazon_emotion_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Ebay Tone Analysis for Reviews</dtitle>
+                <hr>
+                <div id="ebay_emotion_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Rakuten Tone Analysis for Reviews</dtitle>
+                <hr>
+                <div id="rakuten_emotion_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- SCATTER PLOT BLOCK -->
+        <div class="col-sm-2 col-lg-2"></div>
+        <!-- SCATTER PLOT BLOCK -->
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Amazon Tone Analysis for Reviews</dtitle>
+                <hr>
+                <div id="amazon_social_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Ebay Tone Analysis for Reviews</dtitle>
+                <hr>
+                <div id="ebay_social_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Rakuten Tone Analysis for Reviews</dtitle>
+                <hr>
+                <div id="rakuten_social_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- SCATTER PLOT BLOCK -->
+        <div class="col-sm-2 col-lg-2"></div>
+        <!-- SCATTER PLOT BLOCK -->
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Amazon Tone Analysis for Reviews</dtitle>
+                <hr>
+                <div id="amazon_writing_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Ebay Tone Analysis for Reviews</dtitle>
+                <hr>
+                <div id="ebay_writing_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+            </div>
+        </div>
+        <div class="col-sm-3 col-lg-3">
+            <div class="dash-unit">
+                <dtitle>Rakuten Tone Analysis for Reviews</dtitle>
+                <hr>
+                <div id="rakuten_writing_chart" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- /container -->
+<br>
+<!-- /footerwrap -->
+<!-- Le javascript ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script type="text/javascript" src="../static/js/vendor/bootstrap.min.js"></script>
+<script type="text/javascript" src="../static/js/vendor/highcharts.js"></script>
+<script type="text/javascript" src="../static/js/vendor/highcharts-more.js"></script>
+<script type="text/javascript" src="../static/js/vendor/themes/grid.js"></script>
+<script type="text/javascript" charset="utf-8" src="../static/js/app.js"></script>
 
 {% endblock %}
